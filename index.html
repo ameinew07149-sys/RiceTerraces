@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>貢寮水梯田｜找回土地上的事物</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1E2B2A; --ink-soft:#4A5755; --paper:#F4F3ED; --grid:#DCE0D8;
+  --seal:#B5452F; --water:#5E97A0; --rice:#6E9A48; --glow:#F3D46A;
+  --scrim:rgba(30,43,42,.28);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --ink:#E9E7DF; --ink-soft:#B4BDB9; --paper:#243030; --grid:#334240; --scrim:rgba(0,0,0,.4); }
+}
+:root[data-theme="dark"]{ --ink:#E9E7DF; --ink-soft:#B4BDB9; --paper:#243030; --grid:#334240; --scrim:rgba(0,0,0,.4); }
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+body{margin:0;height:100%;overflow:hidden;background:#CDD0CB;color:var(--ink);
+  font-family:"LXGW WenKai TC","Noto Serif TC","PMingLiU",serif;}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--water);outline-offset:3px}
+
+#scene{position:fixed;inset:0;width:100%;height:100%;display:block}
+#scene path,#scene rect,#scene circle{transition:fill 1.6s ease, opacity 1.6s ease}
+
+.flow{fill:none;stroke:var(--water);stroke-width:6;stroke-linecap:round;stroke-dasharray:14 12;opacity:0;transition:opacity 1.2s}
+.flow.on{opacity:.95;animation:flow 1.1s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-26}}
+.cracks{transition:opacity 1.8s}
+.rice{opacity:0;transition:opacity 1.6s}
+.rice.on{opacity:1}
+.seal{transform-box:fill-box;transform-origin:center bottom;opacity:0;transform:translateY(-50px) scale(.3)}
+.seal.on{opacity:1;transform:none;transition:transform .7s cubic-bezier(.3,1.5,.5,1),opacity .35s}
+.ring{fill:none;stroke:#F3D46A;stroke-width:5;opacity:0;transform-box:fill-box;transform-origin:center}
+.ring.go{animation:ring 1.3s ease-out}
+@keyframes ring{0%{opacity:1;transform:scale(.4)}100%{opacity:0;transform:scale(3.4)}}
+.cardArt{float:right;width:clamp(96px,11vw,170px);height:auto;margin:0 0 8px 16px;overflow:visible}
+.firefly{opacity:0}
+.fireflies.on .firefly{animation:twinkle 2.4s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:0}50%{opacity:1}}
+
+/* 標題 */
+.title{position:fixed;left:clamp(16px,3vw,48px);top:calc(env(safe-area-inset-top,0px) + clamp(14px,3vh,40px));pointer-events:none}
+.title h1{margin:0;font-size:clamp(34px,5.2vw,86px);font-weight:700;letter-spacing:.06em;line-height:1.05}
+.title p{margin:.35em 0 0;font-size:clamp(18px,2vw,32px);letter-spacing:.12em}
+.title .q{margin-top:.9em;font-size:clamp(16px,1.6vw,26px);color:var(--ink-soft)}
+
+/* 田間筆記 */
+.notes{position:fixed;right:clamp(12px,2vw,32px);top:calc(env(safe-area-inset-top,0px) + clamp(12px,2.5vh,32px));
+  width:clamp(240px,22vw,340px);padding:18px 20px 16px;color:var(--ink);
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;border-radius:3px;box-shadow:2px 3px 0 rgba(30,43,42,.18);transform:rotate(.6deg)}
+.notes .count{display:flex;align-items:baseline;gap:.4em;margin:0 0 10px}
+.notes .count b{font-size:clamp(28px,2.6vw,42px);line-height:1}
+.notes .count span{font-size:15px;color:var(--ink-soft)}
+.group{margin:10px 0 0}
+.group h3{margin:0 0 4px;font-size:15px;font-weight:700}
+.group small{display:block;font-size:12.5px;color:var(--ink-soft);margin:-2px 0 6px}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{font-size:14px;padding:2px 8px;border:1.5px dashed var(--ink-soft);border-radius:2px;color:transparent;min-width:3.4em;text-align:center;user-select:none}
+.chip.on{border:1.5px solid var(--seal);color:var(--seal);background:rgba(181,69,47,.07)}
+.chip.on.plus{border-color:var(--water);color:var(--water);background:rgba(94,151,160,.1)}
+.aside{margin-top:12px;padding-top:8px;border-top:1.5px solid var(--ink-soft);font-size:13.5px;color:var(--ink-soft);min-height:1.4em}
+
+/* 韌性計 */
+.meter{margin:0 0 12px;padding-bottom:10px;border-bottom:1.5px solid var(--ink-soft)}
+.mhead{display:flex;align-items:baseline;gap:.45em;position:relative}
+.mhead span{font-size:16px;font-weight:700}
+.mhead b{font-size:clamp(28px,2.6vw,42px);line-height:1;transition:color .6s}
+.mhead em{font-style:normal;font-size:15px;color:var(--ink-soft)}
+.delta{position:absolute;right:0;top:0;font-style:normal;font-size:22px;font-weight:700;opacity:0}
+.delta.go{animation:dlt 1.6s ease-out}
+@keyframes dlt{0%{opacity:0;transform:translateY(8px)}20%{opacity:1;transform:none}80%{opacity:1}100%{opacity:0;transform:translateY(-10px)}}
+.bar{position:relative;height:16px;margin:8px 0 8px;border:2px solid var(--ink);border-radius:2px;background:rgba(255,255,255,.4);overflow:hidden}
+.bar i{position:absolute;left:0;top:0;bottom:0;width:0;background:#B5452F;transition:width 1.2s cubic-bezier(.3,1.2,.5,1),background 1s}
+.bar span{position:absolute;top:0;bottom:0;width:1.5px;background:var(--ink);opacity:.45}
+.ses{display:flex;flex-wrap:wrap;gap:4px}
+.ses span{font-size:12.5px;padding:1px 6px;border:1.5px dashed var(--ink-soft);border-radius:2px;color:var(--ink-soft);opacity:.6;transition:.5s}
+.ses span.on{opacity:1;border-style:solid;border-color:var(--water);color:var(--water);background:rgba(94,151,160,.1)}
+.sesbtn{margin-top:10px;width:100%;padding:5px;font-size:14px;border:1.5px solid var(--ink);background:transparent;border-radius:2px}
+.sesline{margin:.6em 0 0!important;padding:6px 12px;border-left:5px solid var(--water);background:rgba(94,151,160,.1)}
+.sesline b{display:block;color:var(--water)}
+.sesline em{display:block;font-style:normal;font-weight:700}
+.card.intro{z-index:13;width:min(980px,94vw)}
+.card.intro h2{font-size:clamp(30px,3vw,48px)}
+.card.intro .hint{font-size:clamp(16px,1.35vw,22px)}
+.intro .act{margin-top:10px}
+.seslist{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;margin:14px 0;font-size:clamp(16px,1.35vw,22px);line-height:1.5}
+.seslist dt{font-weight:700;color:var(--water)}
+.seslist dd{margin:0}
+/* 掃描卡片 */
+.scrim{position:fixed;inset:0;background:var(--scrim);opacity:0;pointer-events:none;transition:opacity .35s}
+.scrim.on{opacity:1;pointer-events:auto}
+.card{position:fixed;left:50%;top:50%;width:min(680px,92vw);max-height:88vh;overflow:auto;
+  transform:translate(-50%,-46%) rotate(-.8deg);opacity:0;pointer-events:none;
+  padding:clamp(22px,3vw,40px) clamp(22px,3.4vw,46px);
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:26px 26px;box-shadow:4px 6px 0 rgba(30,43,42,.22);
+  transition:opacity .35s, transform .45s cubic-bezier(.2,.9,.3,1.1)}
+.card.on{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) rotate(-.8deg)}
+.card .cat{display:inline-block;font-size:clamp(15px,1.3vw,20px);padding:2px 10px;border:2px solid currentColor;border-radius:2px;color:var(--seal)}
+.card h2{margin:.35em 0 .15em;font-size:clamp(36px,4vw,64px);line-height:1.15;letter-spacing:.04em}
+.card .hint{margin:0;font-size:clamp(18px,1.6vw,26px);line-height:1.7;color:var(--ink-soft)}
+.card .ask{margin:1.1em 0 .6em;font-size:clamp(20px,1.8vw,28px);font-weight:700}
+.vote{margin:0 0 .8em;font-size:clamp(18px,1.6vw,26px);color:var(--ink-soft)}
+.vote b{font-size:1.6em;color:var(--seal);margin:0 .15em}
+.vote.end{color:var(--seal);font-weight:700}
+.choices{display:flex;gap:14px;flex-wrap:wrap}
+.choices button,.act{flex:1 1 160px;padding:14px 18px;font-size:clamp(18px,1.6vw,26px);border:2.5px solid var(--ink);background:transparent;border-radius:3px;text-align:left}
+.choices button:hover,.act:hover{background:rgba(94,151,160,.14)}
+.choices kbd,.act kbd{font-family:inherit;font-size:.7em;color:var(--ink-soft);margin-right:.5em}
+.result{display:none}
+.result.on{display:block}
+.verdict{margin:1em 0 .3em;font-size:clamp(22px,2vw,32px);font-weight:700}
+.verdict.good{color:var(--water)} .verdict.bad{color:var(--seal)}
+.result p{margin:.3em 0;font-size:clamp(18px,1.55vw,25px);line-height:1.75}
+.without{color:var(--seal)}
+.links{margin:1em 0 1.2em}
+.links span{font-size:clamp(15px,1.25vw,20px);color:var(--ink-soft);margin-right:.4em}
+.links .chip{color:var(--ink-soft);font-size:clamp(15px,1.25vw,20px)}
+.act{display:block;width:100%;background:var(--ink);color:var(--paper);text-align:center}
+.act:hover{background:var(--ink-soft)}
+.act kbd{color:inherit;opacity:.7}
+
+/* 終幕 */
+.title,.notes,.dockbtn{transition:opacity 1.2s}
+body.ending .title,body.ending .notes,body.ending .dockbtn,body.ending .dock{opacity:0;pointer-events:none}
+#sun{transition:transform 5s cubic-bezier(.2,.7,.3,1),opacity 2s}
+#sun.rise{opacity:.95;transform:translateY(-190px)}
+.net path{fill:none;stroke:#F3D46A;stroke-width:4;stroke-linecap:round;opacity:0}
+.net.on path{opacity:.95;animation:draw 1.3s ease forwards}
+.net.soft path{opacity:.35;transition:opacity 2s}
+@keyframes draw{to{stroke-dashoffset:0}}
+.win{opacity:0;transition:opacity 1.5s}
+#village.lit .win{opacity:.95}
+.bird{opacity:0}
+.birds.on .bird{animation:fly 12s linear forwards}
+@keyframes fly{0%{opacity:0;transform:translate(-120px,0)}8%{opacity:.85}92%{opacity:.85}100%{opacity:0;transform:translate(1800px,-90px)}}
+.seal.on.wave{animation:wave .8s ease-in-out}
+@keyframes wave{0%,100%{transform:none}40%{transform:translateY(-18px) scale(1.08)}}
+.finale{position:fixed;z-index:14;left:50%;top:50%;width:min(780px,92vw);max-height:90vh;overflow:auto;
+  padding:clamp(22px,3vw,42px) clamp(22px,3.4vw,48px);
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:26px 26px;box-shadow:4px 6px 0 rgba(30,43,42,.22);
+  opacity:0;pointer-events:none;transform:translate(-50%,-44%) rotate(-.6deg);transition:opacity 1.2s, transform 1.2s cubic-bezier(.2,.9,.3,1.1)}
+.finale.on{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) rotate(-.6deg)}
+.finale p{margin:0;font-size:clamp(28px,3vw,50px);line-height:1.35;font-weight:700}
+.finale small{display:block;margin-top:.7em;font-size:clamp(17px,1.5vw,24px);line-height:1.7;color:var(--ink-soft)}
+.fstats{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 26px;margin:1.1em 0 1.2em;padding:12px 0;border-top:1.5px solid var(--ink-soft);border-bottom:1.5px solid var(--ink-soft);font-size:clamp(16px,1.4vw,22px)}
+.fstats .big b{font-size:clamp(40px,4vw,64px);line-height:1;color:#5E8C3A;margin:0 .1em}
+.fstats b{font-size:1.3em}
+.fbtns{display:flex;gap:12px;flex-wrap:wrap}
+.fbtns button{flex:1 1 200px;padding:12px;font-size:clamp(17px,1.5vw,24px);border:2.5px solid var(--ink);border-radius:3px;background:transparent}
+.fbtns button.primary{background:var(--ink);color:var(--paper)}
+.endbtn{position:fixed;z-index:14;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);display:none;padding:8px 16px;font-size:16px;
+  background:var(--paper);border:1.5px solid var(--ink);border-radius:3px}
+.endbtn.on{display:block}
+
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 28px);transform:translate(-50%,20px);opacity:0;
+  background:var(--ink);color:var(--paper);padding:10px 20px;border-radius:3px;font-size:20px;transition:.3s;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* 主持人模擬面板 */
+.dockbtn{position:fixed;left:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);padding:6px 12px;font-size:14px;
+  background:rgba(244,243,237,.75);border:1px solid var(--ink-soft);border-radius:3px;color:#1E2B2A}
+.dock{position:fixed;left:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 52px);width:min(520px,94vw);padding:12px;display:none;
+  background:var(--paper);border:1.5px solid var(--ink);border-radius:3px;box-shadow:3px 4px 0 rgba(30,43,42,.2)}
+.dock.on{display:block}
+.dockbtn,.dock{z-index:5}
+.scrim{z-index:10}
+.card{z-index:11}
+.toast{z-index:12}
+.dock p{margin:0 0 8px;font-size:14px;color:var(--ink-soft)}
+.dock .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:6px}
+.dock .grid button{padding:6px;font-size:14px;border:1px solid var(--ink-soft);background:transparent;border-radius:2px}
+.dock .grid button.done{opacity:.4}
+.dock .grid button.decoy{border-style:dashed}
+.dock .grid button.plus{border-color:var(--water);color:var(--water)}
+.dock .row{display:flex;gap:6px;margin-top:8px}
+.dock .row button{flex:1;padding:6px;font-size:14px;border:1px solid var(--ink);background:transparent;border-radius:2px}
+
+@media (max-width:760px){
+  .notes{top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 50px);width:min(300px,70vw);transform:none;padding:12px 14px}
+  .group small{display:none}
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation:none!important;transition-duration:.01s!important;transition-delay:0s!important}
+  .flow.on{stroke-dasharray:none}
+}
+</style>
+</head>
+<body>
+
+<svg id="scene" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <defs>
+    <pattern id="cracks" width="60" height="30" patternUnits="userSpaceOnUse">
+      <path d="M2 18 l10-6 l8 5 l14-9 M30 26 l9-7 l12 4 M44 6 l6 6" fill="none" stroke="#6F6757" stroke-width="1.6" opacity=".55"/>
+    </pattern>
+    <pattern id="ricePat" width="22" height="16" patternUnits="userSpaceOnUse">
+      <rect width="22" height="16" fill="#79A85A"/>
+      <path d="M5 14 l-2-8 M5 14 l0-9 M5 14 l3-8 M16 12 l-2-8 M16 12 l0-9 M16 12 l3-8" stroke="#4E7A35" stroke-width="1.4" fill="none"/>
+    </pattern>
+  </defs>
+  <rect id="sky" width="1600" height="900" fill="#CDD0CB"/>
+  <circle id="sun" cx="760" cy="330" r="64" fill="#F6C76B" opacity="0"/>
+  <path id="sea" d="M940 900 L960 812 Q1280 784 1600 796 L1600 900 Z" fill="#B9BDB8"/>
+  <path id="mtnBack" d="M0 330 Q200 168 420 236 Q620 116 860 214 Q1100 104 1350 222 Q1480 176 1600 244 L1600 900 L0 900 Z" fill="#A9AEA8"/>
+  <path id="hill" d="M0 300 Q520 286 1240 500 Q1420 560 1600 600 L1600 812 Q1280 784 960 812 L0 900 Z" fill="#B7B3A6"/>
+  <g id="village" opacity=".12"></g>
+  <circle id="springPool" cx="128" cy="262" r="16" fill="#9C9483"/>
+  <g id="tiers"></g>
+  <g id="flows"></g>
+  <g id="fireflies" class="fireflies"></g>
+  <rect id="mist" width="1600" height="900" fill="#FFFFFF" opacity=".42" pointer-events="none"/>
+  <g id="net" class="net"></g>
+  <g id="birds" class="birds"></g>
+  <g id="seals"></g>
+</svg>
+
+<header class="title">
+  <h1>貢寮水梯田</h1>
+  <p>找回土地上的事物</p>
+  <p class="q">對地方來說，什麼缺一不可？</p>
+</header>
+
+<aside class="notes" aria-live="polite">
+  <div class="meter" aria-label="韌性">
+    <div class="mhead"><span>韌性</span><b id="resVal">0</b><em id="resLvl">脆弱</em><i class="delta" id="resDelta"></i></div>
+    <div class="bar"><i id="resFill"></i><span style="left:25%"></span><span style="left:50%"></span><span style="left:75%"></span></div>
+    <div class="ses" id="sesChips"></div>
+  </div>
+  <div class="count"><b id="countNum">0</b><span>/ <span id="countTotal">12</span> 件找回來了</span></div>
+  <div class="group"><h3>內生</h3><small>地方原本就有的</small><div class="chips" data-cat="內生"></div></div>
+  <div class="group"><h3>中介者</h3><small>把裡面和外面接起來的</small><div class="chips" data-cat="中介者"></div></div>
+  <div class="group"><h3>外生資源</h3><small>從外面進來的支持</small><div class="chips" data-cat="外生資源"></div></div>
+  <div class="group"><h3>加分項</h3><small>讓地方更穩，但不是非有不可</small><div class="chips" id="bonusChips"></div></div>
+  <div class="aside" id="asideList"></div>
+  <button class="sesbtn" id="sesBtn">SES 框架說明</button>
+</aside>
+
+<section class="card intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="introT">
+  <h2 id="introT">社會生態系統框架</h2>
+  <p class="hint">Ostrom 提出的 SES 框架，把一個地方拆成幾個彼此牽動的子系統，用來看人和自然怎麼一起運作。</p>
+  <dl class="seslist">
+    <dt>RS 資源系統</dt><dd>水源、溝圳、梯田這些承載資源的「容器」</dd>
+    <dt>RU 資源單位</dt><dd>系統產出的東西：稻米、田裡的生物</dd>
+    <dt>A 行動者</dt><dd>使用和照顧資源的人，以及他們的知識</dd>
+    <dt>GS 治理系統</dt><dd>誰訂規則、誰出錢、怎麼支持</dd>
+    <dt>I 互動</dt><dd>人與田、人與人之間發生的事：耕作、協作、交易</dd>
+    <dt>ECO 相關生態系</dt><dd>系統外的氣候與周邊生態</dd>
+    <dt>S 社經背景</dt><dd>市場、人口、政策這些大環境</dd>
+    <dt>O 結果</dt><dd>這次用<b>韌性</b>來看：受到衝擊後，這片田還能不能維持原本的樣貌</dd>
+  </dl>
+  <p class="hint">找回的事物越多、涵蓋的子系統越多元，韌性越高；讓有害的東西進來，韌性會下降。</p>
+  <button class="act" id="btnIntro"><kbd>Enter</kbd>開始找回</button>
+</section>
+
+<div class="scrim" id="scrim"></div>
+<section class="card" id="card" role="dialog" aria-modal="true" aria-labelledby="cardName">
+  <svg class="cardArt" id="cardArt" viewBox="-50 -50 100 100" aria-hidden="true"></svg>
+  <span class="cat" id="cardCat"></span>
+  <h2 id="cardName"></h2>
+  <p class="hint" id="cardHint"></p>
+  <div id="askBlock">
+    <p class="ask">對貢寮水梯田來說，它是？</p>
+    <p class="vote" id="vote"></p>
+    <div class="choices">
+      <button id="btnMust"><kbd>1</kbd>缺一不可</button>
+      <button id="btnBonus"><kbd>2</kbd>加分項</button>
+      <button id="btnNo"><kbd>3</kbd>不需要</button>
+    </div>
+  </div>
+  <div class="result" id="result">
+    <p class="verdict" id="verdict"></p>
+    <p id="why"></p>
+    <p class="sesline" id="sesLine"></p>
+    <p class="without" id="without"></p>
+    <div class="links" id="links"></div>
+    <button class="act" id="btnAct"></button>
+  </div>
+</section>
+
+<div class="finale" id="finale" role="dialog" aria-labelledby="fTitle">
+  <p id="fTitle">一個鄉村，是很多事物一起撐起來的。</p>
+  <small>水、人、田埂、生物、技藝，還有把它們接起來的人。少了任何一樣，這片風景都會慢慢消失——所以要保存的，是整個鄉村的面貌。</small>
+  <div class="fstats">
+    <span class="big">韌性<b id="fRes">0</b><span id="fLvl"></span></span>
+    <span>找回 <b id="fFound">0</b> 件</span>
+    <span>加分 <b id="fBonus">0</b> 件</span>
+    <span>擋在田外 <b id="fBlock">0</b> 件</span>
+    <span>SES 子系統 <b id="fSes">0</b> / 7</span>
+  </div>
+  <div class="fbtns"><button class="primary" id="btnLook">看看這片田</button><button id="btnReplay">重新開始</button></div>
+</div>
+<button class="endbtn" id="endBtn">結語</button>
+
+<div class="toast" id="toast"></div>
+
+<button class="dockbtn" id="dockBtn">模擬掃描（D）</button>
+<div class="dock" id="dock">
+  <p>預覽用：點按鈕＝有人掃到那張 QR Code。水色是加分項，虛線是不需要的。</p>
+  <div class="grid" id="dockGrid"></div>
+  <div class="row"><button id="btnAll">一次找回全部</button><button id="btnReset">重新開始</button></div>
+</div>
+
+<script>
+/* ====== 內容：可直接改這裡 ====== */
+const ITEMS = {
+  spring:{name:"山泉水",ses:["RS","水源和溝圳是整個系統的骨架，決定資源能不能持續供應。"],cat:"內生",ch:"泉",essential:true,pos:[175,252],
+    hint:"從山上流下來、灌進第一層田的水。",
+    why:"水梯田一年到頭都要有水，靠的是山泉和人工挖的溝圳，水從最上層一路往下流。",
+    without:"少了它：梯田只剩一階一階的乾土。",links:["terrace","farmer","wildlife"]},
+  farmer:{name:"種田的人",ses:["A","行動者的人數、年齡、願不願意留下，決定這個系統有沒有人照顧。"],cat:"內生",ch:"人",essential:true,pos:[380,292],
+    hint:"每天巡田、補田埂、看天氣的人。",
+    why:"梯田不是放著就會在，要有人顧水、修埂、插秧、收割。老農的經驗加上回來的新農，田才接得下去。",
+    without:"少了它：沒人種的田，幾年內就長滿草、變回陸地。",links:["terrace","tools","buffalo"]},
+  terrace:{name:"田與田埂",ses:["RS","田埂劃出系統的邊界和規模，維護它是長期的投入。"],cat:"內生",ch:"埂",essential:true,pos:[740,290],
+    hint:"沿著山坡一層層堆起來、圍住水的土埂。",
+    why:"田埂是梯田的骨架，留住水也留住土。每年都要補，一處漏了，下面幾層都會受影響。",
+    without:"少了它：水和土一起往下流走。",links:["spring","farmer"]},
+  climate:{name:"雨與東北季風",ses:["ECO","雨量和季風是系統之外、卻直接影響它的生態條件。"],cat:"內生",ch:"雨",essential:true,pos:[1150,140],
+    hint:"東北角潮濕多雨、冬天吹季風的天氣。",
+    why:"這裡的雨量和季風，決定了田裡的水夠不夠、什麼時候插秧、稻子怎麼長。地方的節奏是跟著氣候長出來的。",
+    without:"少了它：照搬別處的種法，在這裡常常行不通。",links:["spring"]},
+  tools:{name:"農具與技藝",ses:["A","技藝屬於行動者的知識與心智模型，是看不見但會流失的資本。"],cat:"內生",ch:"具",essential:true,pos:[470,382],
+    hint:"犁、耙，還有修田埂、整地的手法。",
+    why:"窄小的梯田大型機具進不去，很多工作要靠傳統農具和老農的手藝。這些知識在人身上，沒傳下去就斷了。",
+    without:"少了它：就算有田有水，也沒人知道怎麼顧。",links:["farmer","buffalo"]},
+  wildlife:{name:"田裡的生物",ses:["RU","田裡的生物是這個系統產出的生態價值，也是生態給付計算的依據。"],cat:"內生",ch:"蛙",essential:true,pos:[620,470],
+    hint:"青蛙、蜻蜓、水生植物，還有夜裡來覓食的動物。",
+    why:"長年有水的梯田就是一片小濕地，很多生物靠它過活。牠們不是田的附屬品，而是這塊地健康的證明。",
+    without:"少了它：田一乾，牠們也跟著消失。",links:["spring","ecopay","lihehe"]},
+  buffalo:{name:"水牛",ses:["I","用什麼方式耕作，是人與田之間的互動；牛耕讓窄田能被照顧。"],cat:"中介者",ch:"牛",essential:true,pos:[880,380],
+    hint:"走得進窄田、能幫忙犁田的大夥伴。",
+    why:"水牛做得到機器做不到的工作，也牽起人、田和技藝之間的關係——要養牛、要會使牛，這些都是地方的一部分。",
+    without:"少了它：有些田就沒辦法整地。",links:["farmer","tools","terrace"]},
+  renhe:{name:"人禾基金會",ses:["I","中介者促成資訊分享、協作與網絡，屬於互動裡的組織活動。"],cat:"中介者",ch:"禾",essential:true,pos:[1000,466],
+    hint:"從外地來，長期陪農民做水梯田復育的團隊。",
+    why:"中介者把外面的資源（經費、計畫、通路、志工）轉成田裡用得上的支持，也把在地的聲音帶出去。它不取代農民，而是讓農民接得住。",
+    without:"少了它：外部資源進不來，或進來了卻接不上地方的需要。",links:["farmer","ecopay","agencies","lihehe"]},
+  lihehe:{name:"狸和禾",ses:["I","品牌把生產和消費接起來，是系統裡的交易互動。"],cat:"中介者",ch:"狸",essential:true,pos:[760,556],
+    hint:"把梯田的米和農產品帶到消費者手上的品牌。",
+    why:"生態友善的米要賣得出去，種田的人才能繼續種。品牌讓買米的人知道，這包米背後是一片有生物住著的田。",
+    without:"少了它：友善耕作的米沒有出路，只能跟一般米拚價格。",links:["farmer","wildlife","funding"]},
+  ecopay:{name:"生態給付",ses:["GS","生態給付是一套規則與誘因：顧好濕地，就得到支持。"],cat:"外生資源",ch:"付",essential:true,pos:[1110,552],
+    hint:"依照田裡維持的生態價值，給農民的支持。",
+    why:"生態給付讓農民不只靠賣米，也因為「顧好這片濕地」而得到回報。保育變成一種被看見的勞動。",
+    without:"少了它：友善耕作的成本全由農民自己扛。",links:["wildlife","farmer","renhe"]},
+  agencies:{name:"公部門的支持",ses:["GS","政府組織訂政策、分配經費，是治理系統的一部分。"],cat:"外生資源",ch:"公",essential:true,pos:[900,642],
+    hint:"林保署、國發會、文化部、農改場的計畫與經費。",
+    why:"公部門帶來經費、技術和政策，但計畫都有期限。要讓錢留下東西，地方得有人、有中介者把它轉成長期的能力。",
+    without:"少了它：地方很難撐過起步；但只有它，計畫一結束就散了。",links:["renhe","ecopay"]},
+  funding:{name:"募資與認購",ses:["S","都市消費者與市場屬於社經背景，透過認購和這片田接上。"],cat:"外生資源",ch:"募",essential:true,pos:[1240,640],
+    hint:"城市的人出錢認購一塊田、預訂一季的米。",
+    why:"認購和募資讓都市的人跟一塊田建立長期關係，收入比較穩，也多了一群在乎這片田的人。",
+    without:"少了它：收成好壞的風險全落在農民身上。",links:["lihehe","farmer"]},
+
+  tour:{name:"深度遊程",ses:["S","觀光市場是外部的社經背景，接得好能帶進收入與關注。"],cat:"外部影響",kind:"bonus",ch:"遊",pos:[200,560],
+    hint:"由在地人帶路，走進田裡、聽農家說故事的小旅行。",
+    why:"好的遊程讓外面的人看懂梯田，也讓農家多一份收入。它讓地方更穩，前提是田還在、人還在。",
+    links:["farmer","renhe"]},
+  contest:{name:"手插秧大賽",ses:["I","活動是人與田、人與人之間的互動場合。"],cat:"外部影響",kind:"bonus",ch:"秧",pos:[330,680],
+    hint:"一年一度，邀大家下田比賽插秧的活動。",
+    why:"活動是讓更多人第一次踏進田裡的入口，有機會變成之後的認購者、志工和回頭客。",
+    links:["funding","farmer"]},
+  market:{name:"農產與加工品販售",ses:["S","市場通路屬於社經背景，讓收入來源更多元。"],cat:"外部影響",kind:"bonus",ch:"售",pos:[470,790],
+    hint:"米以外的加工品、市集擺攤、網路訂購。",
+    why:"收入來源越多元，一季收成不好時的風險就越分散，地方也更撐得住。",
+    links:["lihehe","farmer"]},
+
+  pesticide:{name:"農藥與除草劑",ses:["RU","它會直接傷害資源單位：田裡的生物和水質。"],cat:"外部影響",kind:"no",
+    hint:"噴一次就能省下很多除草、除蟲的力氣。",
+    why:"藥劑會毒死田裡的青蛙、昆蟲和水生植物，而且水會一層層往下流，影響的不只一塊田。",
+    links:["wildlife","spring"]},
+  concrete:{name:"水泥田埂與溝渠",ses:["RS","它改變了資源系統本身，梯田作為濕地的功能就斷了。"],cat:"外部影響",kind:"no",
+    hint:"把田埂和水溝都灌成水泥，以後就不用年年修。",
+    why:"水泥看起來省事，卻讓生物無處躲藏，掉進水溝也爬不出來；梯田作為濕地的功能就斷了。",
+    links:["terrace","wildlife"]},
+  machine:{name:"大型農機",ses:["RS","為了它拓寬田路，會挖壞資源系統的結構：田埂。"],cat:"外部影響",kind:"no",
+    hint:"平原上一台抵十個人的插秧機、收割機。",
+    why:"窄小彎曲的梯田開不進去，硬要拓寬田路只會挖壞田埂。這裡需要的是適合小田的工具和人手。",
+    links:["terrace","tools"]},
+  snail:{name:"福壽螺",ses:["ECO","外來種改變了相關生態系，擠壓原生生物。"],cat:"外部影響",kind:"no",
+    hint:"從外地引進、在水田裡大量繁殖的螺。",
+    why:"外來種會啃食秧苗、擠壓原生生物，一旦擴散就很難清除。",
+    links:["wildlife","farmer"]}
+};
+const VOTE_SEC = 10;           // 全班舉手投票的秒數
+const THRESH = [2,4,6,8,10]; // 第幾件找回時，第 n 層田注水
+
+/* ====== 場景 ====== */
+const NS="http://www.w3.org/2000/svg";
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e};
+const $=id=>document.getElementById(id);
+const KEYS=Object.keys(ITEMS);
+const kindOf=k=>ITEMS[k].kind||(ITEMS[k].essential?"must":"no");
+const ESS=KEYS.filter(k=>kindOf(k)==="must"), BON=KEYS.filter(k=>kindOf(k)==="bonus"), TOTAL=ESS.length;
+$("countTotal").textContent=TOTAL;
+
+const tiers=[], flows=[];
+for(let i=0;i<5;i++){
+  const y=330+i*88, x0=90+i*120, x1=900+i*110, m=(x0+x1)/2;
+  const g=el("g",{},$("tiers"));
+  el("path",{d:`M${x0} ${y+40} Q${m} ${y+18} ${x1} ${y+40} L${x1} ${y+58} Q${m} ${y+36} ${x0} ${y+58} Z`,fill:"#8A8270"},g);
+  const surf=`M${x0} ${y} Q${m} ${y-26} ${x1} ${y} Q${x1+30} ${y+20} ${x1} ${y+40} Q${m} ${y+18} ${x0} ${y+40} Q${x0-28} ${y+20} ${x0} ${y} Z`;
+  const base=el("path",{d:surf,fill:"#ADA48F"},g);
+  const cr=el("path",{d:surf,fill:"url(#cracks)",class:"cracks"},g);
+  const rice=el("path",{d:surf,fill:"url(#ricePat)",class:"rice"},g);
+  tiers.push({base,cr,rice,x1,y});
+}
+flows.push(el("path",{d:"M128 270 Q140 300 150 334",class:"flow"},$("flows")));
+for(let i=0;i<4;i++){const t=tiers[i];flows.push(el("path",{d:`M${t.x1+14} ${t.y+44} Q${t.x1+40} ${t.y+66} ${t.x1+56} ${t.y+90}`,class:"flow"},$("flows")))}
+const lastFlow=el("path",{d:"M1376 728 Q1370 770 1330 806",class:"flow"},$("flows"));
+
+// 村落
+const V=$("village");
+[[1400,690],[1462,676],[1520,700],[1440,734],[1500,744]].forEach(([x,y])=>{
+  el("rect",{x:x-20,y:y-14,width:40,height:26,fill:"#E6E0D2"},V);
+  el("path",{d:`M${x-26} ${y-12} L${x} ${y-32} L${x+26} ${y-12} Z`,fill:"#8C4B3A"},V);
+  el("rect",{x:x-12,y:y-6,width:9,height:9,fill:"#F3D46A",class:"win"},V);el("rect",{x:x+4,y:y-6,width:9,height:9,fill:"#F3D46A",class:"win"},V);
+});
+[[1372,670],[1566,664],[1548,730]].forEach(([x,y])=>{el("circle",{cx:x,cy:y,r:18,fill:"#4F7A4A"},V)});
+// 螢火蟲
+for(let i=0;i<34;i++){
+  const c=el("circle",{cx:120+Math.random()*1300,cy:300+Math.random()*440,r:3+Math.random()*2.5,fill:"#F3D46A",class:"firefly"},$("fireflies"));
+  c.style.animationDelay=(Math.random()*2.4).toFixed(2)+"s";
+}
+// 印章
+/* ====== 物件插圖：想換成自己的圖，在 ITEMS 裡加 img:"img/檔名.png" 即可 ====== */
+const ART={
+ spring:`<ellipse cx="-18" cy="24" rx="20" ry="11" fill="#8E8A80"/><ellipse cx="22" cy="26" rx="16" ry="9" fill="#A29E93"/><path d="M-8 -34 Q-2 0 4 22" stroke="#5E97A0" stroke-width="10" fill="none" stroke-linecap="round"/><ellipse cx="4" cy="30" rx="24" ry="7" fill="#7DB3BA"/><path d="M18 -24 q8 12 0 17 q-8 -5 0 -17z" fill="#7DB3BA"/><path d="M-26 -16 q6 9 0 13 q-6 -4 0 -13z" fill="#7DB3BA"/>`,
+ farmer:`<path d="M-8 26 L-10 42 M8 26 L10 42" stroke="#3C4A55" stroke-width="7" stroke-linecap="round"/><path d="M-15 2 Q0 -4 15 2 L13 28 L-13 28 Z" fill="#4E6F8A"/><path d="M14 6 L28 -6" stroke="#E3BE98" stroke-width="5" stroke-linecap="round"/><path d="M29 -6 q-3 -11 6 -16 M29 -6 q4 -9 -5 -15" stroke="#5E8C3A" stroke-width="3" fill="none"/><circle cx="0" cy="-10" r="9" fill="#E3BE98"/><path d="M-28 -14 L0 -36 L28 -14 Z" fill="#C9A86A" stroke="#9C7F45" stroke-width="2"/>`,
+ terrace:`<path d="M-38 -28 H18 V-20 H-38Z" fill="#7DB3BA"/><path d="M-38 -20 H18 V-11 H-38Z" fill="#8A6E4E"/><path d="M-26 -8 H30 V0 H-26Z" fill="#7DB3BA"/><path d="M-26 0 H30 V9 H-26Z" fill="#8A6E4E"/><path d="M-14 12 H42 V20 H-14Z" fill="#7DB3BA"/><path d="M-14 20 H42 V29 H-14Z" fill="#8A6E4E"/><path d="M-38 -28 H18 M-26 -8 H30 M-14 12 H42" stroke="#5E8C3A" stroke-width="3"/>`,
+ climate:`<path d="M-42 -32 q12 -9 22 0 t22 0" stroke="#7E8B8D" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="-16" cy="-4" r="14" fill="#EEF1F0"/><circle cx="4" cy="-12" r="18" fill="#EEF1F0"/><circle cx="23" cy="-2" r="13" fill="#EEF1F0"/><rect x="-30" y="-4" width="64" height="14" rx="7" fill="#EEF1F0"/><path d="M-18 16 l-5 14 M-4 16 l-5 14 M10 16 l-5 14 M24 16 l-5 14" stroke="#5E97A0" stroke-width="4" stroke-linecap="round"/>`,
+ tools:`<path d="M-30 34 L22 -26" stroke="#8A6440" stroke-width="6" stroke-linecap="round"/><path d="M14 -36 L36 -14 L27 -7 L7 -27 Z" fill="#7B8288"/><path d="M30 34 L-16 -24" stroke="#8A6440" stroke-width="6" stroke-linecap="round"/><path d="M-32 -12 L-6 -38" stroke="#7B8288" stroke-width="5" stroke-linecap="round"/><path d="M-30 -14 l-6 -6 M-23 -21 l-6 -6 M-16 -28 l-6 -6 M-9 -35 l-6 -6" stroke="#7B8288" stroke-width="3.5" stroke-linecap="round"/>`,
+ wildlife:`<path d="M-24 28 l-12 6 M24 28 l12 6" stroke="#6E9A48" stroke-width="6" stroke-linecap="round"/><ellipse cx="0" cy="16" rx="25" ry="16" fill="#6E9A48"/><circle cx="-12" cy="0" r="8" fill="#6E9A48"/><circle cx="12" cy="0" r="8" fill="#6E9A48"/><circle cx="-12" cy="-1" r="4" fill="#1E2B2A"/><circle cx="12" cy="-1" r="4" fill="#1E2B2A"/><path d="M-10 20 q10 6 20 0" stroke="#3E5E2A" stroke-width="2.5" fill="none"/><ellipse cx="22" cy="-36" rx="9" ry="3.5" fill="#BFDCDD" stroke="#5E97A0" stroke-width="1.5"/><ellipse cx="36" cy="-36" rx="9" ry="3.5" fill="#BFDCDD" stroke="#5E97A0" stroke-width="1.5"/><path d="M29 -42 V-20" stroke="#3F7A84" stroke-width="3.5" stroke-linecap="round"/>`,
+ buffalo:`<path d="M-22 16 v18 M-10 18 v16 M12 18 v16 M24 16 v18" stroke="#4B4F52" stroke-width="7" stroke-linecap="round"/><path d="M30 2 q9 8 4 20" stroke="#4B4F52" stroke-width="3" fill="none"/><ellipse cx="0" cy="6" rx="31" ry="17" fill="#4B4F52"/><ellipse cx="-33" cy="-4" rx="12" ry="10" fill="#4B4F52"/><path d="M-41 -11 q-12 -9 -3 -20 M-25 -11 q10 -11 1 -20" stroke="#D9D2C2" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="-37" cy="-5" r="2" fill="#F4F3ED"/>`,
+ renhe:`<path d="M-20 22 v18 M-12 22 v18 M12 22 v18 M20 22 v18" stroke="#3C4A55" stroke-width="5" stroke-linecap="round"/><rect x="-26" y="-4" width="20" height="28" rx="4" fill="#4E6F8A"/><rect x="6" y="-4" width="20" height="28" rx="4" fill="#B5452F"/><path d="M-8 6 H8" stroke="#E3BE98" stroke-width="6" stroke-linecap="round"/><circle cx="-16" cy="-12" r="7" fill="#E3BE98"/><path d="M-32 -16 L-16 -30 L0 -16 Z" fill="#C9A86A"/><circle cx="16" cy="-12" r="7" fill="#E3BE98"/><path d="M0 40 V28 M0 32 q-8 -3 -9 -10 M0 30 q8 -3 9 -10" stroke="#5E8C3A" stroke-width="3" fill="none"/>`,
+ lihehe:`<path d="M-6 -20 q-5 -14 2 -22 M6 -20 q5 -14 -2 -22 M0 -20 v-20" stroke="#C9A040" stroke-width="3" fill="none"/><path d="M-22 -18 Q-30 10 -25 36 H25 Q30 10 22 -18 Z" fill="#E6D8B8" stroke="#A88E5E" stroke-width="2"/><path d="M-23 -18 q23 -10 46 0" stroke="#A88E5E" stroke-width="4" fill="none"/><rect x="-14" y="2" width="28" height="22" fill="#B5452F"/><text x="0" y="19" text-anchor="middle" font-size="17" fill="#F4F3ED" font-family="LXGW WenKai TC,serif" font-weight="700">米</text>`,
+ ecopay:`<circle r="27" fill="#E5C35A" stroke="#B8902E" stroke-width="3"/><circle r="20" fill="none" stroke="#B8902E" stroke-width="1.5"/><path d="M-11 11 Q-13 -15 15 -15 Q15 11 -11 11 Z" fill="#6E9A48"/><path d="M-11 11 L8 -8" stroke="#3E5E2A" stroke-width="2"/>`,
+ agencies:`<path d="M-36 -12 L0 -36 L36 -12 Z" fill="#8E9A9C"/><rect x="-32" y="-12" width="64" height="6" fill="#B9C2C3"/><rect x="-26" y="-6" width="7" height="30" fill="#D5DADB"/><rect x="-11" y="-6" width="7" height="30" fill="#D5DADB"/><rect x="4" y="-6" width="7" height="30" fill="#D5DADB"/><rect x="19" y="-6" width="7" height="30" fill="#D5DADB"/><rect x="-36" y="24" width="72" height="9" fill="#8E9A9C"/>`,
+ funding:`<path d="M0 -6 V38" stroke="#8A6440" stroke-width="6"/><rect x="-32" y="-36" width="64" height="32" rx="3" fill="#D8C29A" stroke="#8A6440" stroke-width="3"/><path d="M0 -10 C-15 -18 -13 -31 -5 -30 Q0 -29 0 -25 Q0 -29 5 -30 C13 -31 15 -18 0 -10Z" fill="#B5452F"/><circle cx="-17" cy="32" r="7" fill="#E5C35A" stroke="#B8902E" stroke-width="2"/><circle cx="16" cy="30" r="7" fill="#E5C35A" stroke="#B8902E" stroke-width="2"/>`,
+ tour:`<ellipse cx="2" cy="34" rx="5" ry="3" fill="#8A6E4E"/><ellipse cx="16" cy="26" rx="5" ry="3" fill="#8A6E4E"/><ellipse cx="8" cy="16" rx="5" ry="3" fill="#8A6E4E"/><ellipse cx="22" cy="6" rx="5" ry="3" fill="#8A6E4E"/><path d="M-22 38 V-36" stroke="#5B5248" stroke-width="4" stroke-linecap="round"/><path d="M-22 -36 L24 -25 L-22 -12 Z" fill="#5E97A0"/>`,
+ contest:`<path d="M-38 -36 Q0 -24 38 -36" stroke="#5B5248" stroke-width="2" fill="none"/><path d="M-26 -32 l5 12 l5 -11 Z M-6 -28 l5 12 l5 -11 Z M14 -29 l5 12 l5 -12 Z" fill="#B5452F"/><path d="M0 36 L-14 -12 M0 36 L-5 -16 M0 36 L5 -16 M0 36 L14 -12 M0 36 L-22 -2 M0 36 L22 -2" stroke="#6E9A48" stroke-width="4" stroke-linecap="round"/><rect x="-9" y="14" width="18" height="8" fill="#C9A86A"/>`,
+ market:`<path d="M-30 -20 V36 M30 -20 V36" stroke="#8A6440" stroke-width="4"/><path d="M-38 -20 L-30 -36 H30 L38 -20 Z" fill="#F4F3ED" stroke="#B5452F" stroke-width="2"/><path d="M-30 -36 L-34 -20 H-22 L-18 -36 Z M-6 -36 L-8 -20 H4 L6 -36 Z M18 -36 L20 -20 H32 L30 -36 Z" fill="#B5452F"/><rect x="-32" y="6" width="64" height="8" fill="#8A6440"/><rect x="-24" y="-8" width="14" height="14" rx="2" fill="#E6D8B8" stroke="#A88E5E"/><circle cx="2" cy="0" r="6" fill="#E5C35A"/><rect x="12" y="-6" width="12" height="12" rx="6" fill="#C46A4A"/>`,
+ pesticide:`<path d="M6 -14 Q30 -16 30 -30" stroke="#5B5248" stroke-width="3" fill="none"/><circle cx="34" cy="-36" r="4" fill="#A3B18A"/><circle cx="40" cy="-28" r="3" fill="#A3B18A"/><circle cx="40" cy="-42" r="3" fill="#A3B18A"/><rect x="-14" y="-20" width="18" height="10" fill="#7B8288"/><rect x="-22" y="-12" width="34" height="46" rx="6" fill="#C7CDB0" stroke="#7B8288" stroke-width="2"/><rect x="-14" y="2" width="18" height="16" fill="#B5452F"/><text x="-5" y="15" text-anchor="middle" font-size="14" fill="#F4F3ED" font-weight="700">!</text>`,
+ concrete:`<path d="M-40 -8 H40 V30 H-40Z" fill="#A9ADAF"/><path d="M-28 -8 V20 H28 V-8 Z" fill="#8D9294"/><path d="M-28 8 H28" stroke="#7DB3BA" stroke-width="6"/><path d="M-36 0 l6 8 l-4 8 M32 4 l4 10" stroke="#6E7375" stroke-width="2" fill="none"/>`,
+ machine:`<rect x="-38" y="12" width="56" height="16" rx="8" fill="#3C4044"/><circle cx="-28" cy="20" r="4" fill="#7B8288"/><circle cx="8" cy="20" r="4" fill="#7B8288"/><rect x="-36" y="-18" width="52" height="30" rx="4" fill="#C8963E"/><rect x="-8" y="-38" width="22" height="20" fill="#9AB8C0" stroke="#5B5248" stroke-width="2"/><path d="M16 -4 H42 L38 14 H16 Z" fill="#7B8288"/>`,
+ snail:`<circle cx="-32" cy="2" r="4" fill="#E58BA6"/><circle cx="-36" cy="9" r="4" fill="#E58BA6"/><circle cx="-29" cy="10" r="4" fill="#E58BA6"/><path d="M28 16 l6 -16 M23 16 l2 -16" stroke="#C9A98A" stroke-width="3" stroke-linecap="round"/><path d="M-26 26 Q0 32 34 26 Q36 16 24 14 H-22 Q-30 16 -26 26Z" fill="#C9A98A"/><circle cx="0" cy="0" r="21" fill="#9C6B3E"/><path d="M-12 0 a12 12 0 1 1 12 12 a8 8 0 1 1 -8 -8 a4 4 0 1 1 4 4" stroke="#6B4527" stroke-width="3" fill="none"/>`
+};
+const artOf=(k,parent)=>{const it=ITEMS[k];
+  if(it.img){el("image",{href:it.img,x:-45,y:-45,width:90,height:90,preserveAspectRatio:"xMidYMid meet"},parent)}
+  else parent.innerHTML=ART[k]||"";};
+
+const seals={}, rings={};
+[...ESS,...BON].forEach(k=>{const it=ITEMS[k],[x,y]=it.pos,plus=kindOf(k)==="bonus";
+  const g=el("g",{transform:`translate(${x} ${y})`},$("seals"));
+  rings[k]=el("circle",{r:30,class:"ring"},g);
+  const inner=el("g",{class:"seal"},g);
+  artOf(k,el("g",{transform:"scale(.95)"},inner));
+  const w=it.name.length*17+18;
+  el("rect",{x:-w/2,y:42,width:w,height:26,rx:3,fill:"#F4F3ED",stroke:plus?"#5E97A0":"#B5452F","stroke-width":2},inner);
+  const t=el("text",{x:0,y:61,"text-anchor":"middle","font-size":17,fill:plus?"#3F7A84":"#B5452F","font-family":"LXGW WenKai TC, serif","font-weight":700},inner);
+  t.textContent=it.name; seals[k]=inner;
+});
+function pop(k){const r=rings[k]; if(!r)return; r.classList.remove("go"); void r.getBBox(); r.classList.add("go");}
+
+/* 顏色漸變 */
+const hx=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+const lerp=(a,b,t)=>{const A=hx(a),B=hx(b);return"#"+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,"0")).join("")};
+
+/* ====== 狀態 ====== */
+const found=new Set(), bonus=new Set(), setAside=new Set();
+const SES_NAME={RS:"資源系統",RU:"資源單位",A:"行動者",GS:"治理系統",I:"互動",ECO:"相關生態系",S:"社經背景"};
+let blockedRight=0, harmIn=0, lastRight=false, lastRes=0;
+Object.entries(SES_NAME).forEach(([c,n])=>{const sp=document.createElement("span");sp.id="ses-"+c;sp.textContent=c+" "+n;$("sesChips").appendChild(sp)});
+function resilience(){
+  const comps=new Set([...found,...bonus].map(k=>ITEMS[k].ses[0]));
+  return {v:Math.max(0,Math.min(100,found.size*5+bonus.size*3+comps.size*3+blockedRight*3-harmIn*8)),comps};
+}
+let queue=[], current=null, stage="closed", done=false, voteT=null;
+function startVote(){
+  let s=VOTE_SEC; const v=$("vote"); v.classList.remove("end");
+  v.innerHTML="全班舉手投票，還有<b>"+s+"</b>秒"; clearInterval(voteT);
+  voteT=setInterval(()=>{s--;
+    if(s<=0){clearInterval(voteT);v.textContent="時間到，請按下多數人的選擇";v.classList.add("end")}
+    else v.querySelector("b").textContent=s;},1000);
+}
+
+// 筆記本格子
+BON.forEach(k=>{const c=document.createElement("span");c.className="chip plus";c.id="chip-"+k;c.textContent=ITEMS[k].name;$("bonusChips").appendChild(c)});
+document.querySelectorAll(".chips[data-cat]").forEach(box=>{
+  ESS.filter(k=>ITEMS[k].cat===box.dataset.cat).forEach(k=>{
+    const c=document.createElement("span");c.className="chip";c.id="chip-"+k;c.textContent=ITEMS[k].name;box.appendChild(c);
+  });
+});
+
+function render(){
+  const p=found.size, t=p/TOTAL;
+  const R=resilience(), v=R.v;
+  $("resVal").textContent=v;
+  const col=v<25?"#B5452F":v<50?"#C9962E":v<75?"#5E97A0":"#5E8C3A";
+  $("resFill").style.width=v+"%"; $("resFill").style.background=col; $("resVal").style.color=col;
+  $("resLvl").textContent=v<25?"脆弱":v<50?"恢復中":v<75?"穩定":"有韌性";
+  Object.keys(SES_NAME).forEach(c=>$("ses-"+c).classList.toggle("on",R.comps.has(c)));
+  if(v!==lastRes){const d=$("resDelta");d.textContent=(v>lastRes?"+":"")+(v-lastRes);d.style.color=v>lastRes?"#5E8C3A":"#B5452F";
+    d.classList.remove("go");void d.offsetWidth;d.classList.add("go");lastRes=v;}
+  $("countNum").textContent=p;
+  $("sky").setAttribute("fill",lerp("#CDD0CB","#BFDCDD",t));
+  document.body.style.background=lerp("#CDD0CB","#BFDCDD",t);
+  $("mtnBack").setAttribute("fill",lerp("#A9AEA8","#5E826D",t));
+  $("hill").setAttribute("fill",lerp("#B7B3A6","#86A26C",t));
+  $("mist").setAttribute("opacity",(.42*(1-t)).toFixed(3));
+  $("springPool").setAttribute("fill",found.has("spring")||p>=1?"#5E97A0":"#9C9483");
+  tiers.forEach((tr,i)=>{const wet=p>=THRESH[i];
+    tr.base.setAttribute("fill",wet?"#7DAEB2":"#ADA48F");tr.cr.style.opacity=wet?0:1;});
+  flows.forEach((f,i)=>f.classList.toggle("on",i===0?p>=1:p>=THRESH[i]));
+  ESS.forEach(k=>{seals[k].classList.toggle("on",found.has(k));$("chip-"+k).classList.toggle("on",found.has(k))});
+  BON.forEach(k=>{seals[k].classList.toggle("on",bonus.has(k));$("chip-"+k).classList.toggle("on",bonus.has(k))});
+  $("asideList").textContent=setAside.size?"擋在田外的："+[...setAside].map(k=>ITEMS[k].name).join("、"):"";
+  [...$("dockGrid").children].forEach(b=>b.classList.toggle("done",isDone(b.dataset.k)));
+}
+
+// 鳥
+[[0,150],[60,176],[30,128],[130,210]].forEach(([dx,y],i)=>{const g=el("g",{transform:`translate(${dx} ${y})`},$("birds"));
+  const b=el("path",{d:"M0 0 q9 -9 18 0 q9 -9 18 0",fill:"none",stroke:"#3C4A55","stroke-width":3,"stroke-linecap":"round",class:"bird"},g);
+  b.style.animationDelay=(i*0.9)+"s";});
+
+function drawNet(){
+  const N=$("net"); N.innerHTML=""; const got=k=>found.has(k)||bonus.has(k), seen=new Set(); let n=0;
+  [...ESS,...BON].filter(got).forEach(a=>(ITEMS[a].links||[]).filter(got).forEach(b=>{
+    const key=[a,b].sort().join("|"); if(seen.has(key))return; seen.add(key);
+    const [x1,y1]=ITEMS[a].pos,[x2,y2]=ITEMS[b].pos, mx=(x1+x2)/2, my=(y1+y2)/2-Math.abs(x1-x2)*.18-30;
+    const p=el("path",{d:`M${x1} ${y1} Q${mx} ${my} ${x2} ${y2}`},N), L=p.getTotalLength();
+    p.style.strokeDasharray=L; p.style.strokeDashoffset=L; p.style.animationDelay=(n++*0.09)+"s";
+  }));
+}
+const T=[]; const later=(f,ms)=>T.push(setTimeout(f,ms));
+function finale(){
+  if(done)return; done=true;
+  document.body.classList.add("ending"); $("dock").classList.remove("on");
+  drawNet(); later(()=>$("net").classList.add("on"),300);
+  tiers.forEach((tr,i)=>later(()=>tr.rice.classList.add("on"),1800+i*420));
+  later(()=>{$("sun").classList.add("rise");$("sky").setAttribute("fill","#F3DDB5");document.body.style.background="#F3DDB5";
+    $("mtnBack").setAttribute("fill","#6F8C69");$("hill").setAttribute("fill","#93AA68");$("mist").setAttribute("opacity","0")},2400);
+  later(()=>{lastFlow.classList.add("on");$("village").setAttribute("opacity","1");$("village").classList.add("lit");$("sea").setAttribute("fill","#4F8EA0")},3900);
+  later(()=>{$("fireflies").classList.add("on");$("birds").classList.add("on")},4500);
+  later(()=>[...ESS,...BON].filter(k=>found.has(k)||bonus.has(k)).forEach((k,i)=>later(()=>seals[k].classList.add("wave"),i*150)),5400);
+  later(()=>$("net").classList.add("soft"),8200);
+  later(showEnd,9000);
+}
+function showEnd(){
+  const R=resilience(), v=R.v;
+  $("fFound").textContent=found.size; $("fBonus").textContent=bonus.size; $("fBlock").textContent=setAside.size; $("fSes").textContent=R.comps.size;
+  $("fLvl").textContent=v<25?"脆弱":v<50?"恢復中":v<75?"穩定":"有韌性";
+  $("finale").classList.add("on"); $("endBtn").classList.remove("on");
+  const t0=performance.now(); (function tick(t){const f=Math.min(1,(t-t0)/1600);$("fRes").textContent=Math.round(v*(1-Math.pow(1-f,3)));if(f<1)requestAnimationFrame(tick)})(t0);
+}
+$("btnLook").onclick=()=>{$("finale").classList.remove("on");$("endBtn").classList.add("on")};
+$("endBtn").onclick=showEnd;
+$("btnReplay").onclick=()=>$("btnReset").click();
+
+/* ====== 卡片流程 ====== */
+const isDone=k=>found.has(k)||bonus.has(k)||setAside.has(k);
+function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("on");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("on"),2200)}
+
+function receiveScan(id){
+  if(!ITEMS[id])return toast("找不到這個物件："+id);
+  if(isDone(id))return toast("已經處理過：「"+ITEMS[id].name+"」");
+  if(current===id||queue.includes(id))return;
+  queue.push(id); if(!current)next();
+}
+window.receiveScan=receiveScan; // ← 之後 Firebase 監聽到掃描時呼叫這個
+
+function next(){
+  current=queue.shift(); if(!current)return;
+  const it=ITEMS[current]; stage="ask";
+  $("cardCat").textContent=it.cat; $("cardName").textContent=it.name; $("cardHint").textContent=it.hint;
+  const ca=$("cardArt"); ca.innerHTML=""; artOf(current,ca);
+  $("askBlock").style.display=""; $("result").classList.remove("on");
+  $("scrim").classList.add("on"); $("card").classList.add("on");
+  startVote();
+}
+
+const VERDICT={
+  must:{ok:"全班選對了，少了它不行。",bad:"它不只是加分：少了它，這片田撐不下去。",act:"把「%」帶回田裡",links:"它牽動著："},
+  bonus:{ok:"全班選對了，它是加分項。",bad:{must:"它很有幫助，但不是缺一不可：沒有它，梯田還在。",no:"其實它是加分項，能讓地方更穩。"},act:"把「%」加進來",links:"它要靠這些才站得住："},
+  no:{ok:"全班選對了，這片田不需要它。",bad:"其實它會傷害這片田。",act:"把「%」擋在田外",links:"它會傷害："}
+};
+function answer(choice){
+  if(stage!=="ask")return; stage="result"; clearInterval(voteT);
+  const it=ITEMS[current], kind=kindOf(current), V=VERDICT[kind], right=choice===kind;
+  $("askBlock").style.display="none";
+  const v=$("verdict");
+  v.textContent=right?V.ok:(typeof V.bad==="string"?V.bad:V.bad[choice]);
+  v.className="verdict "+(right?"good":"bad");
+  $("why").textContent=it.why;
+  lastRight=right;
+  $("sesLine").innerHTML="<b>"+(kind==="no"?"它衝擊的是 ":"SES 位置 ")+it.ses[0]+" "+SES_NAME[it.ses[0]]+"</b>"+it.ses[1]+(kind==="no"?(right?"<em style='color:#5E8C3A'>擋住它：韌性 +3</em>":"<em style='color:#B5452F'>讓它進來過：韌性 −8</em>"):"");
+  $("without").textContent=it.without||""; $("without").style.display=it.without?"":"none";
+  $("btnAct").innerHTML="<kbd>Enter</kbd>"+V.act.replace("%",it.name);
+  const L=$("links"); L.innerHTML="";
+  if(it.links){
+    L.innerHTML="<span>"+V.links+"</span>";
+    it.links.forEach(k=>{const c=document.createElement("span");c.className="chip"+(found.has(k)?" on":"");c.textContent=ITEMS[k].name;L.appendChild(c);L.append(" ")});
+  }
+  $("result").classList.add("on"); $("btnAct").focus();
+}
+
+function commit(){
+  if(stage!=="result")return; stage="closed";
+  const it=ITEMS[current];
+  ({must:found,bonus:bonus,no:setAside})[kindOf(current)].add(current);
+  if(kindOf(current)==="no"){ if(lastRight)blockedRight++; else harmIn++; }
+  $("card").classList.remove("on"); $("scrim").classList.remove("on");
+  const k=current; current=null;
+  setTimeout(()=>{render(); if(kindOf(k)!=="no")pop(k); if(found.size===TOTAL)setTimeout(finale,900);},380);
+  setTimeout(next,1700);
+}
+
+$("btnMust").onclick=()=>answer("must");
+$("btnBonus").onclick=()=>answer("bonus");
+$("btnNo").onclick=()=>answer("no");
+$("btnAct").onclick=commit;
+
+/* ====== 預覽面板 ====== */
+KEYS.forEach(k=>{const b=document.createElement("button");b.textContent=ITEMS[k].name;b.dataset.k=k;
+  if(kindOf(k)!=="must")b.className=kindOf(k)==="no"?"decoy":"plus";b.onclick=()=>{$("dock").classList.remove("on");receiveScan(k)};$("dockGrid").appendChild(b)});
+const toggleDock=()=>$("dock").classList.toggle("on");
+$("dockBtn").onclick=toggleDock;
+$("btnAll").onclick=()=>{$("dock").classList.remove("on");ESS.forEach(k=>found.add(k));render();setTimeout(finale,500)};
+$("btnReset").onclick=()=>{T.forEach(clearTimeout);T.length=0;document.body.classList.remove("ending");$("sun").classList.remove("rise");
+  $("village").classList.remove("lit");$("birds").classList.remove("on");$("net").className="net";$("net").innerHTML="";$("endBtn").classList.remove("on");
+  Object.values(seals).forEach(x=>x.classList.remove("wave"));
+  found.clear();bonus.clear();setAside.clear();blockedRight=0;harmIn=0;queue=[];current=null;stage="closed";done=false;clearInterval(voteT);
+  tiers.forEach(t=>t.rice.classList.remove("on"));lastFlow.classList.remove("on");$("village").setAttribute("opacity",".12");
+  $("sea").setAttribute("fill","#B9BDB8");$("fireflies").classList.remove("on");$("finale").classList.remove("on");
+  $("card").classList.remove("on");$("scrim").classList.remove("on");render()};
+
+document.addEventListener("keydown",e=>{
+  if(e.key==="d"||e.key==="D")return toggleDock();
+  if(stage==="ask"&&e.key==="1")answer("must");
+  if(stage==="ask"&&e.key==="2")answer("bonus");
+  if(stage==="ask"&&e.key==="3")answer("no");
+  if(stage==="result"&&e.key==="Enter"){e.preventDefault();commit()}
+  else if(stage==="intro"&&e.key==="Enter"){e.preventDefault();closeIntro()}
+});
+
+function openIntro(){if(stage!=="closed")return;stage="intro";$("intro").classList.add("on");$("scrim").classList.add("on");}
+function closeIntro(){stage="closed";$("intro").classList.remove("on");$("scrim").classList.remove("on");setTimeout(next,300);}
+$("sesBtn").onclick=openIntro; $("btnIntro").onclick=closeIntro;
+const _next=next; next=function(){ if(stage==="intro")return; _next(); };
+render(); openIntro();
+</script>
+</body>
+</html>

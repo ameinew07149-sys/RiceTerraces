@@ -187,7 +187,7 @@ body[data-s="hunt"] .hud{opacity:1}
 /* ===== 資源盤點：SES 分類 ===== */
 #rseals,#rveil{display:none}
 body[data-s="explore"] #rseals,body[data-s="explore"] #rveil{display:inline}
-body[data-s="explore"] #seals,body[data-s="explore"] #net{display:none}
+body[data-s="explore"] #seals,body[data-s="explore"] #net,body[data-s="explore"] #speciesG{display:none}
 .rs{cursor:pointer;outline:none}
 .rs .art{transform-box:fill-box;transform-origin:center bottom;filter:grayscale(1);opacity:.5;transition:filter .7s,opacity .7s}
 .rs:hover .art,.rs:focus-visible .art{opacity:.85}
@@ -242,6 +242,67 @@ body.play .rtools > div,body.play .rtools > span{display:none}
 #smap{position:absolute;inset:0;width:100%;height:100%}
 .sg{opacity:0;transform:translateY(12px);transition:opacity .8s ease, transform .8s ease}
 .sg.on{opacity:1;transform:none}
+
+/* ===== 生態學頁面 ===== */
+.esvg{position:absolute;inset:0;width:100%;height:100%}
+#succ{position:fixed;z-index:6;left:50%;top:50%;transform:translate(-50%,-50%);width:min(1240px,94vw);text-align:center;color:#F4F3ED;
+  text-shadow:0 2px 8px rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:opacity 1s}
+body[data-s="succ"] #succ{opacity:1}
+#succ h3{margin:0;font-size:clamp(28px,3.2vw,54px);letter-spacing:.06em}
+#succ .sp{margin:.4em 0 1.2em;font-size:clamp(17px,1.6vw,27px);opacity:.9}
+.srow{display:flex;align-items:center;justify-content:center;gap:clamp(6px,1.2vw,20px)}
+.sst{display:flex;flex-direction:column;align-items:center;gap:6px;width:clamp(130px,17vw,240px);opacity:0;transform:translateY(12px);transition:opacity .9s, transform .9s}
+body[data-s="succ"] .sst{opacity:1;transform:none}
+body[data-s="succ"] .sst:nth-of-type(2){transition-delay:.9s}
+body[data-s="succ"] .sst:nth-of-type(3){transition-delay:1.8s}
+body[data-s="succ"] .sst:nth-of-type(4){transition-delay:2.7s}
+.sst svg{width:100%;height:auto;background:rgba(244,243,237,.12);border-radius:6px}
+.sst b{font-size:clamp(20px,2vw,34px)}
+.sst span{font-size:clamp(14px,1.25vw,20px);opacity:.9}
+.sar{font-style:normal;font-size:clamp(28px,3vw,52px);opacity:.8}
+#succ .sf{margin:1.2em 0 0;font-size:clamp(18px,1.8vw,30px);opacity:0;transition:opacity 1s 3.6s}
+body[data-s="succ"] #succ .sf{opacity:1}
+
+/* ===== 這片水梯田的居民 ===== */
+.spgrid{position:absolute;left:clamp(16px,3vw,48px);right:clamp(16px,3vw,48px);top:clamp(120px,17vh,165px);bottom:clamp(50px,8vh,80px);
+  display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:clamp(12px,1.8vw,28px)}
+.spc{display:grid;grid-template-columns:clamp(90px,10vw,160px) 1fr;gap:clamp(10px,1.4vw,22px);align-items:center;
+  padding:clamp(12px,1.6vw,26px);border:2.5px solid var(--ink);border-radius:6px;background:rgba(255,255,255,.7);
+  opacity:0;transform:translateY(14px) scale(.98);transition:opacity .7s, transform .7s}
+body[data-s="tours"] .spc{opacity:1;transform:none}
+.spc.sum{display:flex;flex-direction:column;justify-content:center;gap:.5em;background:var(--rice);border-color:var(--rice);color:#fff}
+.spc.sum h3{color:#fff}
+.spc svg{width:100%;height:auto;overflow:visible}
+.spc h3{margin:0;font-size:clamp(22px,2.2vw,38px);line-height:1.2}
+.spc h3 small{font-size:.55em;color:var(--ink-soft);font-weight:400;margin-left:.4em}
+.sptag{display:inline-block;margin:.45em 0 .5em;padding:2px 10px;border-radius:3px;color:#fff;font-size:clamp(13px,1.1vw,18px);font-weight:700}
+.spc p{margin:0;font-size:clamp(15px,1.35vw,22px);line-height:1.6}
+.spsrc{position:absolute;left:clamp(16px,3vw,48px);bottom:clamp(16px,3vh,30px);margin:0;font-size:clamp(12px,.95vw,15px);color:var(--ink-soft)}
+@media (max-width:760px){.spgrid{grid-template-columns:1fr;grid-template-rows:none;overflow:auto}}
+
+/* ===== 我們的觀點 ===== */
+.stw{position:absolute;left:clamp(16px,3vw,48px);right:clamp(16px,3vw,48px);top:clamp(120px,17vh,165px);bottom:clamp(150px,22vh,200px);
+  display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:clamp(14px,2vw,32px)}
+.stc{padding:clamp(14px,1.8vw,28px);border:2.5px solid var(--ink);border-top-width:10px;border-radius:4px;background:rgba(255,255,255,.65);overflow:auto;
+  opacity:0;transform:translateY(14px);transition:opacity .9s, transform .9s}
+body[data-s="stance"] .stc{opacity:1;transform:none}
+body[data-s="stance"] .st2{transition-delay:1.2s}
+body[data-s="stance"] .st3{transition-delay:2.4s}
+.st1{border-top-color:#4A5755}.st2{border-top-color:var(--water)}.st3{border-top-color:var(--rice)}
+.stc h3{margin:0 0 .6em;font-size:clamp(22px,2.2vw,36px)}
+.stq{margin:0 0 .8em;padding:.2em 0 .2em .8em;border-left:5px solid var(--seal);font-size:clamp(18px,1.6vw,27px);line-height:1.55}
+.stq small{display:block;margin-top:.2em;font-size:.68em;color:var(--ink-soft)}
+.stsrc{margin:.4em 0 0;font-size:clamp(13px,1vw,16px);color:var(--ink-soft)}
+.stc p.str{margin:0 0 .8em;font-size:clamp(18px,1.6vw,27px);line-height:1.65}
+.stc ul{margin:0;padding-left:1.2em}
+.stc li{margin:0 0 .55em;font-size:clamp(18px,1.6vw,27px);line-height:1.55}
+.stband{position:absolute;left:clamp(16px,3vw,48px);right:clamp(16px,3vw,48px);bottom:clamp(24px,5vh,56px);min-height:clamp(96px,15vh,130px);
+  display:flex;flex-direction:column;justify-content:center;gap:.3em;padding:clamp(12px,1.6vw,24px) clamp(18px,2.4vw,40px);border-radius:4px;
+  background:var(--rice);color:#fff;opacity:0;transition:opacity 1s 3.8s}
+body[data-s="stance"] .stband{opacity:1}
+.stband b{font-size:clamp(22px,2.2vw,36px)}
+.stband span{font-size:clamp(16px,1.5vw,25px);line-height:1.5}
+@media (max-width:760px){.stw{grid-template-columns:1fr;overflow:auto;bottom:200px}}
 
 /* ===== 掃描自己玩 ===== */
 .pqwrap{position:absolute;inset:0;display:grid;grid-template-columns:auto 1fr;gap:clamp(24px,4vw,72px);align-items:center;padding:0 clamp(24px,7vw,140px)}
@@ -299,7 +360,12 @@ body[data-l="dry"] #dry,
 body[data-l="diagram"] #diagram,
 body[data-l="sesmap"] #sesmap,
 body[data-l="reflect"] #reflect,
-body[data-l="playqr"] #playqr{opacity:1}
+body[data-l="playqr"] #playqr,
+body[data-l="resist"] #resist,
+body[data-l="divers"] #divers,
+body[data-l="cycle"] #cycle,
+body[data-l="stance"] #stance,
+body[data-l="tours"] #tours{opacity:1}
 body[data-l="dry"].dryGone #dry{opacity:0}
 body[data-l="globe"] #globe{pointer-events:auto}
 
@@ -345,6 +411,7 @@ body[data-l="globe"] #globe{pointer-events:auto}
   <g id="net" class="net"></g>
   <g id="birds" class="birds"></g>
   <g id="seals"></g>
+  <g id="speciesG"></g>
   <rect id="rveil" width="1600" height="900" fill="#F4F3ED" opacity=".42"/>
   <g id="rseals"></g>
 </svg>
@@ -397,6 +464,47 @@ body[data-l="globe"] #globe{pointer-events:auto}
   </svg>
 </section>
 
+<!-- 次生演替（疊在乾旱梯田上） -->
+<div id="succ" aria-hidden="true">
+  <h3>次生演替：停止耕作，就是干擾停止</h3>
+  <p class="sp">水田能維持濕地的樣子，是因為每年都有人翻土、灌水、收割</p>
+  <div class="srow">
+    <div class="sst"><svg viewBox="0 0 200 140"><rect x="10" y="74" width="180" height="46" rx="6" fill="#7DAEB2"/><path d="M40 86 l-7-28 M40 86 l0-32 M40 86 l7-28 M80 86 l-7-28 M80 86 l0-32 M80 86 l7-28 M120 86 l-7-28 M120 86 l0-32 M120 86 l7-28 M160 86 l-7-28 M160 86 l0-32 M160 86 l7-28" stroke="#8FC069" stroke-width="4" stroke-linecap="round"/></svg><b>水田</b><span>每年翻土・灌水・收割</span></div>
+    <i class="sar">→</i>
+    <div class="sst"><svg viewBox="0 0 200 140"><rect x="10" y="104" width="180" height="16" rx="4" fill="#8A7A5A"/><path d="M28 106 l-5-26 M32 106 l4-30 M60 106 l-6-34 M64 106 l5-24 M95 106 l-4-30 M100 106 l6-36 M132 106 l-6-26 M136 106 l5-34 M166 106 l-5-30 M170 106 l5-24" stroke="#C9C06A" stroke-width="4" stroke-linecap="round"/></svg><b>草本荒地</b><span>水退去，草先長出來</span></div>
+    <i class="sar">→</i>
+    <div class="sst"><svg viewBox="0 0 200 140"><rect x="10" y="104" width="180" height="16" rx="4" fill="#7A6A4A"/><ellipse cx="55" cy="88" rx="36" ry="24" fill="#6E9A48"/><ellipse cx="112" cy="80" rx="42" ry="30" fill="#5E8C3A"/><ellipse cx="160" cy="92" rx="28" ry="18" fill="#7FA858"/></svg><b>灌叢</b><span>灌木接著進入</span></div>
+    <i class="sar">→</i>
+    <div class="sst"><svg viewBox="0 0 200 140"><rect x="10" y="104" width="180" height="16" rx="4" fill="#6A5A3A"/><path d="M50 104 V70 M100 104 V60 M150 104 V72" stroke="#6B4A2E" stroke-width="7"/><circle cx="50" cy="52" r="30" fill="#3E6B47"/><circle cx="100" cy="38" r="36" fill="#2F5A3A"/><circle cx="150" cy="54" r="28" fill="#4F7A4A"/></svg><b>次生林</b><span>樹林慢慢成形</span></div>
+  </div>
+  <p class="sf">水一退，蛙類、蜻蜓、水生植物這些濕地物種也跟著退出</p>
+</div>
+
+<!-- 綠色旅遊 -->
+<section class="layer paper" id="tours">
+  <div class="head"><h2 id="toTitle"></h2><p id="toSub"></p></div>
+  <div class="spgrid" id="toGrid"></div>
+  <p class="spsrc" id="toSrc"></p>
+</section>
+
+<!-- 抗性與韌性 -->
+<section class="layer paper" id="resist">
+  <div class="head"><h2>抗性與韌性：為什麼要把這些事物找回來</h2><p>球與杯：杯壁越陡越不容易被推動，杯子越深越能回到原處</p></div>
+  <svg class="esvg" id="rsvg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
+</section>
+
+<!-- 多樣性 -->
+<section class="layer paper" id="divers">
+  <div class="head"><h2>多樣性：為什麼不是單一事物</h2><p>同一個功能有多種來源，而且它們對衝擊的反應不同</p></div>
+  <svg class="esvg" id="vsvg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
+</section>
+
+<!-- 適應循環 -->
+<section class="layer paper" id="cycle">
+  <div class="head"><h2>適應循環：貢寮水梯田走過的路</h2><p>系統會在成長、保守、釋放、重組之間循環</p></div>
+  <svg class="esvg" id="csvg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
+</section>
+
 <!-- SES 架構圖 -->
 <section class="layer paper" id="sesmap">
   <div class="head"><h2 id="sTitle"></h2><p id="sSub"></p></div>
@@ -406,6 +514,17 @@ body[data-l="globe"] #globe{pointer-events:auto}
       <marker id="arF" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#B5452F"/></marker>
     </defs>
   </svg>
+</section>
+
+<!-- 我們的觀點 -->
+<section class="layer paper" id="stance">
+  <div class="head"><h2 id="stTitle"></h2><p id="stSub"></p></div>
+  <div class="stw">
+    <div class="stc st1"><h3>報導裡的聲音</h3><div id="stQuotes"></div><p class="stsrc" id="stSrc"></p></div>
+    <div class="stc st2"><h3>我們的解讀</h3><div id="stRead"></div></div>
+    <div class="stc st3"><h3>如果我們是行動者</h3><ul id="stAct"></ul></div>
+  </div>
+  <div class="stband"><b id="stBandT"></b><span id="stBandS"></span></div>
 </section>
 
 <!-- 評論與提問（預留） -->
@@ -512,16 +631,16 @@ const TEXT={
   stamp:"期中報告",
   titleSub:"找回土地上的事物",
   globeTaiwan:"台灣",
-  globeGongliao:"新北・貢寮",
+  globeGongliao:"貢寮・內寮溪水梯田",
   globeCap:"從一個社區尺度來看里山精神",
   dryCap:"這裡已經廢耕了許久……",
   awake:"把土地上該有的事物<br>一個個找回來吧？",
   huntTitle:"把土地上該有的事物找回來",
   huntSub:"到教室各個角落找找看，用手機掃描 QR Code",
-  revealCap:"土地上的事物，彼此連結在一起"
+  revealCap:"土地上的事物彼此連結，水梯田的居民也跟著回來了"
 };
 // 貢寮水梯田的座標（地球縮放的終點，可自行微調）
-const GONGLIAO=[121.897,25.010];
+const GONGLIAO=[121.89175,24.97346];   // 內寮溪水梯田 [經度, 緯度]
 
 const ITEMS={
   water:{name:"水",art:"spring",ok:true,pos:[175,252],
@@ -531,34 +650,35 @@ const ITEMS={
   tools:{name:"傳統耕具",ok:true,pos:[330,382],
     text:"窄小的梯田大型機具進不去，要靠傳統耕具和老農的手藝。"},
   wildlife:{name:"濕地生物",ok:true,pos:[1010,470],
-    text:"長年有水的梯田就是一片濕地，青蛙、蜻蜓和水生植物都住在這裡。"},
+    text:"長年有水的梯田就是一片濕地，黃腹細蟌、食蟹獴、唐水蛇都住在這裡。"},
   crop:{name:"作物",ok:true,pos:[580,556],
     text:"友善耕作的稻米讓田有收成，農民才能繼續種下去。"},
 
-  machine:{name:"大型機具",ok:false},
-  pesticide:{name:"農藥",ok:false},
-  fertilizer:{name:"化學肥料",ok:false},
-  concrete:{name:"水泥田埂",ok:false},
-  snail:{name:"福壽螺",ok:false}
+  machine:{name:"大型機具",ok:false,text:"開不進窄小的梯田，硬要拓寬田路只會挖壞田埂。"},
+  pesticide:{name:"農藥",ok:false,text:"會毒死濕地生物，而且水一層層往下流，影響不只一塊田。"},
+  fertilizer:{name:"化學肥料",ok:false,text:"多餘的養分隨水流下，容易讓水體優養化。"},
+  concrete:{name:"水泥田埂",ok:false,text:"棲地變得單一，生物無處躲藏，掉進水泥溝也爬不出來。"},
+  snail:{name:"福壽螺",ok:false,text:"外來種，會啃食秧苗、排擠原生生物；和禾生產班的作業準則就明訂要避免外來入侵種。"}
 };
 
 // 中介者圖解
 const MEDIATOR={name1:"人禾環境倫理",name2:"發展基金會",tag:"中介者"};
 const FIELD={name1:"貢寮水梯田",name2:"以社區為中心"};
-const RESOURCES=["林保署","國發會","文化部","農改場","嘖嘖募資"];
-const OUTCOMES=["生態保育報告","傳統農業文化保存","地方創生發展"];
-const PRODUCTS=["友善環境產品"];          // ← 之後再補
-const PROMOTION=["紀錄片","繪本","活動"];
+// [名稱, 小字說明]；小字留空就只顯示名稱
+const RESOURCES=[["林保署","保育計畫・生態勞務給付（2011 起）"],["國發會","和禾聚落整修・青年培力工作站"],["文化部","紀錄片《和禾歲記》"],["農改場","桃園場分析在地平林種稻米"],["挖貝募資","里山農創基地長期集資（2024 起）"]];
+const OUTCOMES=[["生態保育報告","物種調查・期刊發表・IPSI 案例"],["傳統農業文化保存","手耕與牛耕技藝・平林種"],["地方創生發展","和禾聚落・森川里海合作社"]];
+const PRODUCTS=[["和禾米","分級保價收購：田蠳・穀精・阿獴米"],["狸和禾小穀倉","收購・碾製・銷售・綠色保育標章"]];
+const PROMOTION=[["紀錄片《和禾歲記》","李偉傑、范欽慧"],["繪本《小班做飯糰》","許增巧 文・圖"],["活動與綠色旅遊","田邊聊寮・手插秧大賽・團體遊程"]];
 const LOOP_LABEL="被更多人看見，帶回更多支持與資源";
 const DHEAD=[
   null,
   ["中介者：人禾環境倫理發展基金會","連結許多外部資源，打造以社區為中心的模式"],
-  ["媒合外部資源","林保署、國發會、文化部、農改場、嘖嘖募資"],
+  ["媒合外部資源","林保署、國發會、文化部、農改場、挖貝募資"],
   ["資源進入場域","經由中介者，讓資源真正落到這片水梯田"],
   ["場域的成果","生態保育報告・傳統農業文化保存・地方創生發展"],
   ["緊密的連結與循環","和土地上的事物一起，形成彼此支撐的循環"],
-  ["產出","從這片田長出來的東西"],
-  ["推廣","讓更多人認識這片水梯田"]
+  ["產出","從這片田長出來的東西：和禾米與狸和禾小穀倉"],
+  ["推廣","紀錄片、繪本、活動，讓更多人認識這片水梯田"]
 ];
 
 /* ====== 資源盤點：每個資源的 SES 分類 ======
@@ -568,31 +688,81 @@ const SESC={RS:"#3F7F8A",RU:"#5E8C3A",A:"#A8741A",GS:"#6B5B95",I:"#B5452F",ECO:"
 const RES={
   climate:{name:"雨與東北季風",art:"climate",ses:"ECO",hint:"東北角潮濕多雨、冬天吹季風的天氣。",why:"氣候在系統之外，卻直接決定水夠不夠、什麼時候插秧，屬於相關生態系。"},
   terrace:{name:"田與田埂",art:"terrace",ses:"RS",hint:"沿著山坡一層層堆起來、圍住水的土埂。",why:"田埂劃出系統的邊界與規模，需要年年維護，是資源系統的一部分。"},
-  ndc:{name:"國發會",art:"agencies",ses:"GS",hint:"國家發展委員會。",why:"政府組織，帶來地方創生的政策與經費，屬於治理系統。"},
+  ndc:{name:"國發會",art:"agencies",ses:"GS",hint:"國家發展委員會：整修吉林分校成為和禾聚落，設立青年培力工作站。",why:"政府組織，帶來地方創生的政策與經費，屬於治理系統。"},
   buffalo:{name:"水牛",art:"buffalo",ses:"I",hint:"走得進窄田、能幫忙犁田的大夥伴。",why:"用牛耕田是人與田之間的互動方式，讓窄小的梯田能被照顧。"},
-  zeczec:{name:"嘖嘖募資",art:"funding",ses:"S",hint:"群眾募資平台。",why:"都市群眾與市場屬於外部的社經背景，透過募資和這片田接上。"},
+  zeczec:{name:"挖貝募資",art:"funding",ses:"S",hint:"WaBay 挖貝上的長期集資：貢寮水梯田里山農創基地（2024 起）。",why:"都市群眾與市場屬於外部的社經背景，透過募資和這片田接上。"},
   water:{name:"水",art:"spring",ses:"RS",hint:"山泉與溝圳，從最上層一路往下流。",why:"水源與溝圳是承載整個系統的骨架，決定資源能不能持續供應。"},
   farmer:{name:"農民",art:"farmer",ses:"A",hint:"每天巡田、補田埂、看天氣的人。",why:"使用與照顧資源的人；人數、年齡、願不願意留下，都會影響整個系統。"},
-  culture:{name:"文化部",art:"culture",ses:"GS",hint:"中央的文化主管機關。",why:"政府組織，支持傳統農業文化的保存，屬於治理系統。"},
+  culture:{name:"文化部",art:"culture",ses:"GS",hint:"中央的文化主管機關：紀錄片《和禾歲記》。",why:"政府組織，支持傳統農業文化的保存，屬於治理系統。"},
   lihehe:{name:"狸和禾",art:"lihehe",ses:"I",hint:"把梯田的米帶到消費者手上的品牌。",why:"把生產和消費接起來，是系統裡的交易與網絡互動。"},
   ecopay:{name:"生態給付",art:"ecopay",ses:"GS",hint:"依照田裡維持的生態價值，給農民的支持。",why:"一套規則與誘因：顧好濕地，就得到支持，屬於治理系統。"},
   renhe:{name:"人禾環境倫理發展基金會",short:"人禾基金會",art:"renhe",ses:"GS",hint:"長期陪農民復育水梯田的中介者。",why:"非政府組織也是治理系統的一部分；人禾以中介者的角色連結外部資源、協調地方規則。"},
   crop:{name:"作物",art:"crop",ses:"RU",hint:"友善耕作的稻米。",why:"稻米是這個系統產出、被收成的東西，屬於資源單位。"},
-  tour:{name:"深度遊程",art:"tour",ses:"I",hint:"由在地人帶路，走進田裡的小旅行。",why:"遊客走進田裡、聽農家說故事，是人與田、人與人之間的互動。"},
-  forestry:{name:"林保署",art:"forestry",ses:"GS",hint:"農業部林業及自然保育署。",why:"政府組織，提供生態保育的政策與經費，屬於治理系統。"},
+  tour:{name:"綠色旅遊遊程",short:"綠色旅遊",art:"tour",ses:"I",hint:"和禾聚落的團體遊程：漫步水梯田、秋冬農事、踏草尋牛、蜂禾日麗、和禾米飯糰手作。",why:"遊客跟著在地人走進田裡、一起做農事，是人與田、人與人之間的互動；像秋冬農事的踩田，本身就是維護水梯田的工作。"},
+  forestry:{name:"林保署",art:"forestry",ses:"GS",hint:"農業部林業及自然保育署（前身林務局）：2011 年起支持水梯田保育計畫與生態勞務給付。",why:"政府組織，提供生態保育的政策與經費，屬於治理系統。"},
   tools:{name:"傳統耕具",art:"tools",ses:"A",hint:"犁、耙，還有修田埂、整地的手法。",why:"行動者擁有的技術與知識，看不見，但會跟著人一起流失。"},
-  wildlife:{name:"濕地生物",art:"wildlife",ses:"RU",hint:"青蛙、蜻蜓、水生植物……",why:"濕地生物是系統產出的生態價值，也是生態給付計算的依據。"},
-  contest:{name:"手插秧大賽",art:"contest",ses:"I",hint:"一年一度，邀大家下田插秧的活動。",why:"活動是人與田互動的場合，也讓外面的人第一次踏進田裡。"},
+  wildlife:{name:"濕地生物",art:"wildlife",ses:"RU",hint:"黃腹細蟌、食蟹獴、唐水蛇、葦草蘭、水生植物……",why:"濕地生物是系統產出的生態價值，也是生態給付計算的依據。"},
+  contest:{name:"手插秧大賽",art:"contest",ses:"I",hint:"每年三月，邀大家下水梯田比賽手插秧。",why:"活動是人與田互動的場合，也讓外面的人第一次踏進田裡。"},
   market:{name:"農產與加工品販售",art:"market",ses:"S",hint:"米以外的加工品、市集擺攤、網路訂購。",why:"市場屬於外部的社經背景，讓收入來源更多元。"},
-  tari:{name:"農改場",art:"tari",ses:"GS",hint:"農業部的農業改良場。",why:"政府組織，提供農業技術輔導，屬於治理系統。"}
+  tari:{name:"農改場",art:"tari",ses:"GS",hint:"桃園區農業改良場：分析過在地種了 50 年的平林種稻米。",why:"政府組織，提供農業技術輔導，屬於治理系統。"},
+  mountain:{name:"雪山山脈尾稜的山林",short:"上游山林",art:"mountain",ses:"ECO",hint:"水梯田位在雪山山脈尾稜，上游的森林與溪澗是水的來源。",why:"山林在水梯田之外，卻決定了水從哪裡來、來多少，屬於相關生態系。"},
+  wetland:{name:"雙溪下游・田寮洋濕地",short:"田寮洋濕地",art:"wetland",ses:"ECO",hint:"山谷的溪流匯入雙溪，下游的田寮洋是候鳥遷徙的中繼站。",why:"上游水梯田和下游田寮洋靠同一條溪相連，水和養分在兩個系統之間流動，屬於相關生態系。"}
 };
 // 架構圖中「O 結果」框的內容
 const SES_OUTCOMES=["生態保育報告","傳統農業文化保存","地方創生發展","友善環境產品"];
-const SESMAP_TEXT=["貢寮水梯田的社會生態系統","Ostrom SES 框架　實線：直接連結　虛線：回饋"];
+const SESMAP_TEXT=["貢寮水梯田的社會生態系統","Ostrom SES 框架　實線：直接連結　虛線：回饋　紅線：外部干擾"];
+const ECO_PERF=["韌性","生物多樣性"];   // Ostrom (2009) 的 O2 生態績效
 // 最後一頁：先留空，之後把內容填進陣列即可
 const REFLECT_TEXT=["建設性評論與現場提問","從案例分析出發，帶著問題走進現場"];
-const CRITIQUE=[];
-const QUESTIONS=[];
+const CRITIQUE=[
+  "中介者的冗餘：外部資源多半經由人禾這一個節點進入，一旦計畫結束或人力不足，整個資源網路會一起受影響。"
+];
+const QUESTIONS=[
+  "廢耕多久之後，梯田就很難恢復？最難修的是田埂、溝圳，還是人？",
+  "復耕之後，哪些生物最先回來？有沒有一直沒回來的？",
+  "颱風或乾旱時，田出過什麼狀況？當時誰去修、錢從哪裡來？",
+  "如果人禾明天離開，哪些事還能繼續運作？",
+  "生態給付是根據什麼計算的？農民自己覺得合理嗎？",
+  "你們希望來的人越來越多，還是維持現在的規模就好？"
+];
+// 「這片水梯田的居民」頁
+const SPECIES={
+  title:"這片水梯田的居民",
+  sub:"長年有水的梯田就是一片濕地：田區紀錄到 800 多種生物（2022）",
+  list:[   // pos：回到水梯田時出現的位置（場景座標 1600×900）
+    {art:"damsel",pos:[900,232],name:"黃腹細蟌",alias:"田蠳",tag:"全台僅貢寮穩定分布",c:"#C9962E",text:"曾在台灣消失，2009 年在貢寮水梯田重新被發現。和禾米「田蠳米」就用了牠的名字。"},
+    {art:"mongoose",pos:[1230,548],name:"食蟹獴",tag:"二級保育類",c:"#B5452F",text:"水梯田的指標生物之一，會到溪邊和田間覓食。"},
+    {art:"snake",pos:[430,640],name:"唐水蛇",tag:"二級保育類",c:"#B5452F",text:"生活在水田與溝渠一帶的水蛇。"},
+    {art:"turtle",pos:[880,676],name:"柴棺龜",tag:"保育類",c:"#B5452F",text:"復耕後在水梯田周邊增加的物種之一。"},
+    {art:"orchid",pos:[1185,330],name:"葦草蘭",tag:"紅皮書名錄",c:"#6B5B95",text:"列在紅皮書名錄的受威脅植物，人禾協助在地復育。"},
+    {art:"aquatic",pos:[240,548],name:"水生植物",tag:"受威脅植物",c:"#6B5B95",text:"小莕菜、絲葉狸藻、挖耳草、毛澤番椒，都要靠終年蓄水的田。"}
+  ],
+  src:"資料：農業部〈貢寮和禾感恩會〉（2015）、農傳媒（2022）、關鍵評論網"
+};
+// 「綠色旅遊」頁：和禾聚落的團體遊程
+const TOURS={
+  title:"綠色旅遊：走進田裡，而不是看著田",
+  sub:"和禾聚落的團體預約遊程",
+  list:[
+    {art:"tour",name:"漫步水梯田",tag:"解說導覽",c:"#3F7F8A",text:"走訪和禾水梯田，認識貢寮的風土知識、里山生活，以及水梯田的生態系服務。"},
+    {art:"terrace",name:"水梯田秋冬農事",tag:"田野體驗",c:"#5E8C3A",text:"秋收後到冬至前的翻犁季，赤腳下田踩踏，把稻頭和周邊植物翻進泥土。"},
+    {art:"buffalo",name:"踏草尋牛",tag:"田野體驗",c:"#5E8C3A",text:"跟著牧牛人找水牛、參加水牛見面會，認識水牛飼育與山林知識。"},
+    {art:"bee",name:"蜂禾日麗",tag:"田野體驗",c:"#5E8C3A",text:"跟著養蜂人認識蜜蜂與蜂巢，品嚐不同季節的森林蜜，認識東北角的蜜源植物。"},
+    {art:"onigiri",name:"和禾米飯糰手作",tag:"食農手作",c:"#A8741A",text:"學煮和禾米，用無塑的自然包材，做白花紫蘇飯糰和薑黃瓠瓜乾飯糰。"}
+  ],
+  sum:["體驗，就是一起顧田","踩田、牧牛、煮米，都是這片田本來就要做的事。團體預約、由在地人帶領，也讓人數維持在田承受得起的範圍。"],
+  src:"資料：和禾聚落官網〈團體預約／綠色旅遊〉；微笑台灣（承載管制）"
+};
+// 「我們的觀點」頁：報導引文與我們的解讀
+const STANCE={
+  title:"我們的觀點：不是擴大，而是守住",
+  sub:"從報導裡讀到在地想要的，以及我們能做的",
+  quotes:[["當農業的支撐力量只剩下觀光，是件很危險的事",""],["總常說不要向天要太多","農民"],["不過度打擾也是對貢寮復育的一種支持",""]],
+  quoteSrc:"出處：環境資訊中心〈和禾歲記〉報導",
+  read:["貢寮水梯田想做的，是把自然景觀和耕作方式保存給下一代，而不是擴大知名度。","在地期待的支持，是購買友善耕作的產品，而不是把水梯田經營成觀光場。"],
+  act:["協助推廣和禾米與保價收購的理念","把紀錄片、繪本介紹給更多人","讓農民能自給自足、維持這片場域","參加在地人帶領的遊程，來的時候不過度打擾"],
+  band:["棄成長（degrowth）的取向","不追求資本的膨脹與累積，運用在地本來就有的資產營生，讓這塊場域成為實現美好生活的地方"]
+};
 
 /* ====== 工具 ====== */
 const NS="http://www.w3.org/2000/svg";
@@ -632,6 +802,16 @@ ART.fertilizer=`<circle cx="-30" cy="34" r="4" fill="#9AB8C0"/><circle cx="-20" 
 ART.forestry=`<path d="M-44 38 H44" stroke="#6E8A5A" stroke-width="3"/><path d="M-18 38 V22" stroke="#6B4A2E" stroke-width="6"/><path d="M-18 -38 L-40 -4 H-30 L-44 22 H8 L-6 -4 H4 Z" fill="#4F7A4A"/><path d="M20 38 V26" stroke="#6B4A2E" stroke-width="6"/><path d="M20 -16 L4 10 H11 L0 30 H40 L29 10 H36 Z" fill="#6E9A48"/>`;
 ART.culture=`<path d="M-40 -14 Q-20 -24 0 -12 Q20 -24 40 -14 V28 Q20 18 0 30 Q-20 18 -40 28 Z" fill="#F4F3ED" stroke="#8A6440" stroke-width="3"/><path d="M0 -12 V30" stroke="#8A6440" stroke-width="2.5"/><path d="M-32 -4 H-9 M-32 6 H-9 M-32 16 H-13 M9 -4 H32 M9 6 H32" stroke="#B5452F" stroke-width="2.5"/><path d="M20 -42 L32 -22" stroke="#5B5248" stroke-width="4" stroke-linecap="round"/><path d="M32 -22 l4 9 l-9 -4 z" fill="#1E2B2A"/>`;
 ART.tari=`<path d="M-10 -38 H10" stroke="#5B6B70" stroke-width="4" stroke-linecap="round"/><path d="M-7 -38 V-8 L-28 30 Q-31 37 -23 37 H23 Q31 37 28 30 L7 -8 V-38" fill="#E3EEF0" stroke="#5B6B70" stroke-width="3"/><path d="M-21 24 L-11 8 H11 L21 24 Q22 30 16 30 H-16 Q-22 30 -21 24Z" fill="#7DB3BA"/><path d="M0 22 V0 M0 7 q-11 -2 -13 -13 M0 2 q10 -3 11 -13" stroke="#5E8C3A" stroke-width="3.5" fill="none" stroke-linecap="round"/>`;
+ART.damsel=`<ellipse cx="-17" cy="-14" rx="24" ry="6" fill="#E8F4F6" stroke="#7DB3BA" stroke-width="1.5" transform="rotate(-18 -17 -14)"/><ellipse cx="-17" cy="-2" rx="22" ry="5.5" fill="#E8F4F6" stroke="#7DB3BA" stroke-width="1.5" transform="rotate(14 -17 -2)"/><ellipse cx="17" cy="-14" rx="24" ry="6" fill="#E8F4F6" stroke="#7DB3BA" stroke-width="1.5" transform="rotate(18 17 -14)"/><ellipse cx="17" cy="-2" rx="22" ry="5.5" fill="#E8F4F6" stroke="#7DB3BA" stroke-width="1.5" transform="rotate(-14 17 -2)"/><path d="M0 -4 V44" stroke="#E2B21C" stroke-width="5" stroke-linecap="round"/><rect x="-4.5" y="-20" width="9" height="18" rx="4" fill="#5E8C3A"/><circle cx="-5" cy="-24" r="4.5" fill="#3E6B26"/><circle cx="5" cy="-24" r="4.5" fill="#3E6B26"/>`;
+ART.mongoose=`<path d="M26 4 Q48 0 46 -18" stroke="#7A6A55" stroke-width="10" fill="none" stroke-linecap="round"/><ellipse cx="0" cy="8" rx="30" ry="15" fill="#7A6A55"/><ellipse cx="-31" cy="-2" rx="15" ry="11" fill="#7A6A55"/><path d="M-44 0 l-6 2" stroke="#5B4E3E" stroke-width="4" stroke-linecap="round"/><path d="M-30 6 L-12 18" stroke="#F4F3ED" stroke-width="4" stroke-linecap="round"/><circle cx="-37" cy="-5" r="2.2" fill="#1E2B2A"/><path d="M-18 21 v13 M-5 22 v12 M10 22 v12 M22 20 v14" stroke="#5B4E3E" stroke-width="5.5" stroke-linecap="round"/>`;
+ART.snake=`<path d="M-46 30 Q0 22 46 30" stroke="#7DB3BA" stroke-width="5" fill="none"/><path d="M-40 18 C-28 -4 -14 -4 -6 12 C2 28 16 28 24 8 C29 -4 36 -8 40 -12" stroke="#5F6A48" stroke-width="11" fill="none" stroke-linecap="round"/><path d="M-40 18 C-28 -4 -14 -4 -6 12 C2 28 16 28 24 8 C29 -4 36 -8 40 -12" stroke="#C9B36A" stroke-width="2.5" fill="none" stroke-dasharray="5 6"/><ellipse cx="42" cy="-14" rx="9" ry="6" fill="#5F6A48" transform="rotate(-30 42 -14)"/><circle cx="44" cy="-17" r="1.8" fill="#F4F3ED"/>`;
+ART.turtle=`<path d="M-40 26 Q0 20 40 26" stroke="#7DB3BA" stroke-width="5" fill="none"/><path d="M-26 14 l-8 10 M26 14 l8 10 M-18 -6 l-10 -8 M18 -6 l10 -8" stroke="#8A7A4A" stroke-width="7" stroke-linecap="round"/><ellipse cx="38" cy="2" rx="11" ry="8" fill="#9A8A5A"/><circle cx="43" cy="0" r="1.8" fill="#1E2B2A"/><ellipse cx="0" cy="4" rx="34" ry="22" fill="#6B5636"/><path d="M-20 -6 L0 -14 L20 -6 L20 12 L0 20 L-20 12 Z M0 -14 V20 M-20 3 H20" stroke="#A48A5A" stroke-width="2.5" fill="none"/>`;
+ART.orchid=`<path d="M-30 40 Q-24 0 -36 -30 M-14 40 Q-12 -4 -18 -38 M0 40 Q4 0 -2 -24 M14 40 Q18 4 26 -34 M28 40 Q30 10 40 -14" stroke="#5E8C3A" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M-2 -24 V-44" stroke="#6E9A48" stroke-width="3"/><circle cx="-2" cy="-46" r="5" fill="#E9D7E8" stroke="#9A7AA0" stroke-width="1.5"/><circle cx="6" cy="-40" r="4" fill="#E9D7E8" stroke="#9A7AA0" stroke-width="1.5"/><circle cx="-9" cy="-38" r="4" fill="#E9D7E8" stroke="#9A7AA0" stroke-width="1.5"/>`;
+ART.aquatic=`<rect x="-46" y="0" width="92" height="40" rx="6" fill="#BFDCDD"/><path d="M-30 40 Q-34 26 -26 14 M-6 40 Q-10 24 -2 12 M24 40 Q20 28 30 14" stroke="#6E9A48" stroke-width="2" fill="none"/><ellipse cx="-24" cy="2" rx="13" ry="5" fill="#6E9A48"/><ellipse cx="6" cy="0" rx="11" ry="4.5" fill="#5E8C3A"/><ellipse cx="30" cy="3" rx="12" ry="5" fill="#6E9A48"/><circle cx="-18" cy="-4" r="3.5" fill="#F4F3ED" stroke="#C9B36A" stroke-width="1.5"/><circle cx="12" cy="-6" r="3.5" fill="#F4F3ED" stroke="#C9B36A" stroke-width="1.5"/><path d="M-10 -2 V-26 M-10 -26 q-6 -2 -8 -8 M-10 -20 q6 -2 8 -8" stroke="#3E6B26" stroke-width="2" fill="none"/><circle cx="-10" cy="-28" r="3" fill="#E5C35A"/>`;
+ART.bee=`<path d="M-40 34 Q-30 20 -36 6 M-40 34 Q-46 22 -52 18" stroke="#5E8C3A" stroke-width="3" fill="none"/><circle cx="-36" cy="4" r="7" fill="#F4F3ED" stroke="#C9B36A" stroke-width="2"/><circle cx="-36" cy="4" r="2.5" fill="#E5C35A"/><ellipse cx="-2" cy="-14" rx="13" ry="8" fill="#E8F4F6" stroke="#7DB3BA" stroke-width="1.5" transform="rotate(-25 -2 -14)"/><ellipse cx="14" cy="-12" rx="13" ry="8" fill="#E8F4F6" stroke="#7DB3BA" stroke-width="1.5" transform="rotate(20 14 -12)"/><ellipse cx="6" cy="6" rx="24" ry="15" fill="#E5C35A"/><path d="M-2 -8 V20 M10 -8 V20" stroke="#3C3A30" stroke-width="5"/><circle cx="-20" cy="2" r="9" fill="#3C3A30"/><path d="M30 6 l9 2" stroke="#3C3A30" stroke-width="3" stroke-linecap="round"/>`;
+ART.onigiri=`<ellipse cx="0" cy="28" rx="44" ry="12" fill="#8FB86A"/><path d="M-40 28 Q0 8 40 28" stroke="#5E8C3A" stroke-width="2" fill="none"/><path d="M0 -36 C14 -36 38 12 34 24 C30 34 -30 34 -34 24 C-38 12 -14 -36 0 -36Z" fill="#FFFFFF" stroke="#C9C6BC" stroke-width="2"/><rect x="-15" y="6" width="30" height="26" rx="3" fill="#2F3B2F"/><circle cx="-8" cy="-8" r="3" fill="#8A5A9A"/><circle cx="6" cy="-14" r="2.6" fill="#8A5A9A"/><circle cx="2" cy="-2" r="2.2" fill="#8A5A9A"/>`;
+ART.mountain=`<path d="M-48 34 L-18 -30 L4 6 L20 -18 L48 34 Z" fill="#6F8C69"/><path d="M-18 -30 L-26 -14 L-10 -14 Z" fill="#F4F3ED"/><circle cx="-30" cy="18" r="9" fill="#3E6B47"/><circle cx="-14" cy="12" r="10" fill="#2F5A3A"/><circle cx="10" cy="20" r="9" fill="#3E6B47"/><circle cx="28" cy="16" r="8" fill="#4F7A4A"/><path d="M4 6 C2 16 10 24 6 40" stroke="#7DB3BA" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+ART.wetland=`<rect x="-48" y="10" width="96" height="28" rx="8" fill="#9CC6CC"/><path d="M-40 22 h18 M-10 30 h22 M20 20 h18" stroke="#F4F3ED" stroke-width="2.5" stroke-linecap="round"/><path d="M-36 10 v-16 M-30 10 v-20 M-24 10 v-14 M34 10 v-18 M40 10 v-14" stroke="#6E9A48" stroke-width="3" stroke-linecap="round"/><path d="M-18 -26 q8 -8 16 0 q8 -8 16 0" stroke="#3C4A55" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M8 -38 q6 -6 12 0 q6 -6 12 0" stroke="#3C4A55" stroke-width="3" fill="none" stroke-linecap="round"/><ellipse cx="0" cy="6" rx="10" ry="5" fill="#F4F3ED"/><path d="M8 4 l8 -6" stroke="#F4F3ED" stroke-width="3" stroke-linecap="round"/><path d="M-2 10 v8 M3 10 v8" stroke="#C9962E" stroke-width="2"/>`;
 const drawArt=(key,parent)=>{parent.innerHTML=ART[key]||""};
 const artOf=(k,parent)=>{const it=ITEMS[k]||{};
   if(it.img){parent.innerHTML="";el("image",{href:it.img,x:-45,y:-45,width:90,height:90,preserveAspectRatio:"xMidYMid meet"},parent)}
@@ -727,7 +907,7 @@ function setLandscape(full,animate){
     $("village").classList.remove("lit");$("village").setAttribute("opacity",".12");$("sea").setAttribute("fill","#B9BDB8");
     $("fireflies").classList.remove("on");$("birds").classList.remove("on");lastFlow.classList.remove("on");
     tiers.forEach(t=>t.rice.classList.remove("on"));Object.values(seals).forEach(s=>s.classList.remove("wave"));
-    renderScene(); return;
+    showSpecies(false); renderScene(); return;
   }
   OKS.forEach(k=>{seals[k].classList.add("on")});
   tiers.forEach(tr=>{tr.base.setAttribute("fill","#7DAEB2");tr.cr.style.opacity=0});
@@ -741,6 +921,7 @@ function setLandscape(full,animate){
   later(()=>{lastFlow.classList.add("on");$("village").setAttribute("opacity","1");$("village").classList.add("lit");$("sea").setAttribute("fill","#4F8EA0")},3900*d);
   later(()=>{$("fireflies").classList.add("on");if(animate)$("birds").classList.add("on")},4500*d);
   if(animate)later(()=>OKS.forEach((k,i)=>later(()=>seals[k].classList.add("wave"),i*160)),5400);
+  showSpecies(true,animate);
 }
 
 /* ====== 掃描 ====== */
@@ -767,7 +948,7 @@ function nextPop(){
   if(!it.ok){el("path",{d:"M-38 -38 L38 38 M38 -38 L-38 38",class:"xmark"},A)}
   $("popVerdict").textContent=it.ok?"找回來了！":"不對，再想想。";
   $("popName").textContent=it.name;
-  $("popText").textContent=it.ok?it.text:"這不是這塊土地需要的東西。";
+  $("popText").textContent=it.ok?it.text:(it.text||"這不是這塊土地需要的東西。");
   $("popBy").textContent=q.by?(it.ok?"由 "+q.by+" 找到":q.by+" 掃到的"):"";
   $("scrim").classList.add("on"); P.classList.add("on");
   setTimeout(()=>{
@@ -787,6 +968,10 @@ function chip(p,cx,cy,s,o={}){const fs=o.fs||24,h=o.h||50,w=o.w||s.length*fs+40;
   el("rect",{x:cx-w/2,y:cy-h/2,width:w,height:h,rx:4,fill:o.fill||"#FFFFFF",stroke:o.stroke||"#1E2B2A","stroke-width":2.5},p);
   txt(p,cx,cy+fs*.36,s,fs,{fill:o.color||"#1E2B2A","font-weight":700});return w}
 const edge=(cx,cy,r,tx,ty)=>{const a=Math.atan2(ty-cy,tx-cx);return[cx+r*Math.cos(a),cy+r*Math.sin(a)]};
+function chip2(p,cx,cy,t,sub,o){const h=o.h,w=o.w;
+  el("rect",{x:cx-w/2,y:cy-h/2,width:w,height:h,rx:4,fill:o.fill||"#FFFFFF",stroke:o.stroke||"#1E2B2A","stroke-width":2.5},p);
+  if(!sub){txt(p,cx,cy+o.fs*.36,t,o.fs,{"font-weight":700});return}
+  txt(p,cx,cy-3,t,o.fs,{"font-weight":700}); txt(p,cx,cy+o.sfs+5,sub,o.sfs,{fill:"#4A5755"});}
 (function buildDiagram(){
   const M=[560,470], MR=100, F=[900,470], FR=108;
   // 1 中介者
@@ -797,13 +982,13 @@ const edge=(cx,cy,r,tx,ty)=>{const a=Math.atan2(ty-cy,tx-cx);return[cx+r*Math.co
   txt(g,M[0],M[1]+58,MEDIATOR.name2,22,{"font-weight":700});
   chip(g,M[0],M[1]-MR-8,MEDIATOR.tag,{fs:20,h:36,fill:"#B5452F",stroke:"#B5452F",color:"#F4F3ED"});
   // 2 外部資源
-  const RX=210, RY0=250, RS=Math.min(110,440/Math.max(1,RESOURCES.length-1));
+  const RX=200, RW=300, RY0=240, RS=Math.min(106,424/Math.max(1,RESOURCES.length-1));
   const gl=dg(2,DL), gn=dg(2,DN);
-  txt(gn,RX,200,"外部資源",26,{"font-weight":700,fill:"#4A5755"});
-  RESOURCES.forEach((r,i)=>{const y=RY0+i*RS;
-    chip(gn,RX,y,r,{w:230,h:58,fs:26});
-    const [ex,ey]=edge(M[0],M[1],MR+10,RX+120,y);
-    el("path",{d:`M${RX+118} ${y} C${RX+200} ${y} ${ex-70} ${ey} ${ex} ${ey}`,class:"dflow","marker-end":"url(#arW)"},gl);});
+  txt(gn,RX,192,"外部資源",26,{"font-weight":700,fill:"#4A5755"});
+  RESOURCES.forEach(([r,sub],i)=>{const y=RY0+i*RS;
+    chip2(gn,RX,y,r,sub,{w:RW,h:66,fs:24,sfs:15});
+    const [ex,ey]=edge(M[0],M[1],MR+10,RX+RW/2,y);
+    el("path",{d:`M${RX+RW/2+2} ${y} C${RX+RW/2+60} ${y} ${ex-50} ${ey} ${ex} ${ey}`,class:"dflow","marker-end":"url(#arW)"},gl);});
   // 3 進入場域
   const gl3=dg(3,DL), gn3=dg(3,DN);
   el("path",{d:`M${M[0]+MR+8} ${M[1]} L${F[0]-FR-14} ${F[1]}`,class:"dflow thick","marker-end":"url(#arW)"},gl3);
@@ -811,21 +996,19 @@ const edge=(cx,cy,r,tx,ty)=>{const a=Math.atan2(ty-cy,tx-cx);return[cx+r*Math.co
   txt(gn3,F[0],F[1]-4,FIELD.name1,30,{"font-weight":700});
   txt(gn3,F[0],F[1]+32,FIELD.name2,20,{fill:"#4A5755"});
   // 右欄：成果、產出、推廣
-  const CX=1340, CW=320; let y=160; const boxes={};
-  function group(at,title,list,horizontal,color){
-    const gL=dg(at,DL), gN=dg(at,DN);
-    const h=horizontal?118:56+list.length*58;
-    el("rect",{x:CX-CW/2,y,width:CW,height:h,rx:6,fill:"rgba(255,255,255,.55)",stroke:color,"stroke-width":3},gN);
-    txt(gN,CX,y+36,title,26,{"font-weight":700,fill:color});
-    if(horizontal){const w=(CW-40)/list.length; list.forEach((s,i)=>chip(gN,CX-CW/2+20+w*(i+.5),y+84,s,{w:w-10,fs:22,h:46}))}
-    else list.forEach((s,i)=>chip(gN,CX,y+82+i*58,s,{w:CW-40,fs:23,h:48}));
+  const CX=1360, CW=360; let y=150; const boxes={};
+  function group(at,title,list,color){
+    const gL=dg(at,DL), gN=dg(at,DN), h=50+list.length*64+8;
+    el("rect",{x:CX-CW/2,y,width:CW,height:h,rx:6,fill:"rgba(255,255,255,.6)",stroke:color,"stroke-width":3},gN);
+    txt(gN,CX,y+34,title,24,{"font-weight":700,fill:color});
+    list.forEach(([t,sub],i)=>chip2(gN,CX,y+82+i*64,t,sub,{w:CW-36,h:58,fs:20,sfs:14}));
     const cy=y+h/2, [sx,sy]=edge(F[0],F[1],FR+8,CX-CW/2,cy);
     el("path",{d:`M${sx} ${sy} C${sx+90} ${sy} ${CX-CW/2-110} ${cy} ${CX-CW/2-10} ${cy}`,class:"dflow gold","marker-end":"url(#arG)"},gL);
-    boxes[at]={y,h}; y+=h+26;
+    boxes[at]={y,h}; y+=h+18;
   }
-  group(4,"成果",OUTCOMES,false,"#5E8C3A");
-  group(6,"產出",PRODUCTS,false,"#C9962E");
-  group(7,"推廣",PROMOTION,true,"#B5452F");
+  group(4,"成果",OUTCOMES,"#5E8C3A");
+  group(6,"產出",PRODUCTS,"#C9962E");
+  group(7,"推廣",PROMOTION,"#B5452F");
   // 5 與土地上的事物形成循環
   const gl5=dg(5,DL), gn5=dg(5,DN), RR=200;
   el("circle",{cx:F[0],cy:F[1],r:RR,class:"cyc"},gl5);
@@ -838,9 +1021,9 @@ const edge=(cx,cy,r,tx,ty)=>{const a=Math.atan2(ty-cy,tx-cx);return[cx+r*Math.co
     chip(gn5,x,yy+56,ITEMS[k].name,{fs:18,h:30,fill:"#F4F3ED",stroke:"#B5452F",color:"#B5452F"});
   });
   // 7 推廣帶回資源：循環
-  const b7=boxes[7], ry=RY0+(RESOURCES.length-1)*RS, bottom=b7.y+b7.h;
-  el("path",{d:`M${CX} ${bottom+8} C${CX} 880 ${RX+60} 900 ${RX} ${ry+38}`,class:"dflow red","marker-end":"url(#arR)"},dg(7,DL));
-  const gl7=dg(7,DN); const lx=760, ly=Math.min(872,bottom+170);
+  const b7=boxes[7], ry=RY0+(RESOURCES.length-1)*RS, my=b7.y+b7.h/2;
+  el("path",{d:`M${CX-CW/2-4} ${b7.y+b7.h-28} C980 890 ${RX} 900 ${RX} ${ry+42}`,class:"dflow red","marker-end":"url(#arR)"},dg(7,DL));
+  const gl7=dg(7,DN); const lx=614, ly=852;
   chip(gl7,lx,ly,LOOP_LABEL,{fs:20,h:38,fill:"#F4F3ED",stroke:"#B5452F",color:"#B5452F"});
 })();
 function setDiagram(d){
@@ -850,7 +1033,7 @@ function setDiagram(d){
 
 /* ====== 資源盤點 ====== */
 const RKEYS=Object.keys(RES), RTOTAL=RKEYS.length, SESN=Object.fromEntries(SES);
-const RPOS=(()=>{const rows=[[215,[150,390,630,870,1110]],[370,[150,390,630,870,1110]],[525,[150,390,630,870,1110]],[680,[270,510,750,990]]];
+const RPOS=(()=>{const rows=[[205,[150,390,630,870,1110]],[345,[270,510,750,990]],[485,[150,390,630,870,1110]],[625,[270,510,750,990]],[765,[150,450,800]]];
   const out=[];rows.forEach(([y,xs])=>xs.forEach(x=>out.push([x,y])));return out})();
 RKEYS.forEach((k,i)=>RES[k].pos=RPOS[i]||[800,450]);
 const rDone=new Set(); let rCur=null, rStage="closed";
@@ -940,7 +1123,7 @@ function sarrow(p,d,feedback){el("path",{d,fill:"none",stroke:feedback?"#B5452F"
   sbox(g,60,140,1480,84,"S","社經與政治背景",SESC.S);
   namesOf("S").forEach((s,i)=>chip(g,700+i*270,182,s,{w:250,fs:21,h:42,fill:"#FFFFFF",stroke:SESC.S,color:SESC.S}));
   sbox(g,60,806,1480,80,"ECO","相關生態系",SESC.ECO);
-  namesOf("ECO").forEach((s,i)=>chip(g,700+i*270,846,s,{w:250,fs:21,h:42,fill:"#FFFFFF",stroke:SESC.ECO,color:SESC.ECO}));
+  namesOf("ECO").forEach((s,i)=>chip(g,560+i*270,846,s,{w:250,fs:21,h:42,fill:"#FFFFFF",stroke:SESC.ECO,color:SESC.ECO}));
   g=sg(2);
   sbox(g,60,250,400,236,"RS","資源系統",SESC.RS); sgrid(g,namesOf("RS"),60,326,400,1,SESC.RS);
   sbox(g,60,524,400,236,"RU","資源單位",SESC.RU); sgrid(g,namesOf("RU"),60,600,400,1,SESC.RU);
@@ -955,11 +1138,17 @@ function sarrow(p,d,feedback){el("path",{d,fill:"none",stroke:feedback?"#B5452F"
   sbox(g,530,296,540,186,"I","互動",SESC.I); sgrid(g,namesOf("I"),530,372,540,2,SESC.I);
   g=sg(5);
   sarrow(g,"M800 484 L800 536");
-  sbox(g,530,542,540,196,"O","結果",SESC.RU); sgrid(g,SES_OUTCOMES,530,618,540,2,"#1E2B2A",20);
+  sbox(g,530,542,540,196,"O","結果（含生態績效）",SESC.RU); sgrid(g,SES_OUTCOMES,530,618,540,3,"#1E2B2A",17);
+  {const cw=(540-28)/3;ECO_PERF.forEach((s,i)=>{const n=SES_OUTCOMES.length+i;
+    chip(g,530+14+cw*(n%3+.5),618+Math.floor(n/3)*52,s,{w:cw-12,fs:18,h:42,fill:"#DCEBD3",stroke:SESC.RU,color:"#3E6B26"})});}
   g=sg(6);
   sarrow(g,"M460 368 C496 368 492 392 526 392"); sarrow(g,"M460 642 C506 642 486 452 526 452");
   sarrow(g,"M1140 368 C1104 368 1108 392 1074 392"); sarrow(g,"M1140 642 C1094 642 1114 452 1074 452");
   sarrow(g,"M800 226 L800 246"); sarrow(g,"M800 804 L800 764");
+  el("rect",{x:1150,y:150,width:378,height:66,rx:4,fill:"#FBEDEA",stroke:"#B5452F","stroke-width":2,"stroke-dasharray":"7 5"},g);
+  txt(g,1339,177,"外部干擾",19,{fill:"#B5452F","font-weight":700});
+  txt(g,1339,203,"颱風・乾旱・人口外移・補助中斷",16,{fill:"#B5452F"});
+  el("path",{d:"M1250 218 C1250 244 1130 238 1098 254",fill:"none",stroke:"#B5452F","stroke-width":4,"marker-end":"url(#arF)"},g);
   g=sg(7);
   sarrow(g,"M528 700 C500 700 488 712 464 712",true); sarrow(g,"M1072 700 C1100 700 1112 712 1136 712",true);
   sarrow(g,"M600 740 C600 790 300 790 260 762",true); sarrow(g,"M1000 740 C1000 790 1300 790 1340 762",true);
@@ -967,10 +1156,141 @@ function sarrow(p,d,feedback){el("path",{d,fill:"none",stroke:feedback?"#B5452F"
 })();
 function revealSes(){SM.querySelectorAll(".sg").forEach(g=>{g.classList.remove("on");later(()=>g.classList.add("on"),300+(+g.dataset.at-1)*650)})}
 
+/* ====== 水梯田的居民（找齊之後回到田裡） ====== */
+const spEls=[];
+SPECIES.list.forEach(sp=>{const [x,y]=sp.pos;
+  const g=el("g",{transform:`translate(${x} ${y})`},$("speciesG"));
+  const ring=el("circle",{r:30,class:"ring"},g);
+  const inner=el("g",{class:"seal"},g);
+  const a=el("g",{transform:"translate(0 -6) scale(.95)"},inner); drawArt(sp.art,a);
+  const w=Math.max(sp.name.length*17,sp.tag.length*12)+26;
+  el("rect",{x:-w/2,y:46,width:w,height:46,rx:4,fill:"#F4F3ED",stroke:sp.c,"stroke-width":2},inner);
+  txt(inner,0,66,sp.name,17,{"font-weight":700});
+  txt(inner,0,85,sp.tag,12,{fill:sp.c,"font-weight":700});
+  spEls.push({inner,ring});});
+function showSpecies(on,animate){spEls.forEach(({inner,ring},i)=>{
+  if(!on){inner.classList.remove("on");return}
+  if(!animate){inner.classList.add("on");return}
+  later(()=>{inner.classList.add("on");ring.classList.remove("go");void ring.getBBox();ring.classList.add("go")},4800+i*320);});}
+
+/* ====== 生態學頁面 ====== */
+const sgIn=(svg,at)=>el("g",{class:"sg","data-at":at},svg);
+function revealIn(svg,gap){svg.querySelectorAll(".sg").forEach(g=>{g.classList.remove("on");later(()=>g.classList.add("on"),300+(+g.dataset.at-1)*(gap||650))})}
+function ltxt(p,x,y,lines,fs,a={},lh){const t=el("text",{x,y,"font-size":fs,fill:"#1E2B2A",...FONT,...a},p);
+  [].concat(lines).forEach((s,i)=>{const sp=el("tspan",{x,dy:i?(lh||fs*1.55):0},t);sp.textContent=s});return t}
+function ecard(p,x,y,w,h,color,title,lines,fs){
+  el("rect",{x,y,width:w,height:h,rx:6,fill:"rgba(255,255,255,.7)",stroke:color,"stroke-width":2.5},p);
+  el("rect",{x,y,width:w,height:10,rx:3,fill:color},p);
+  ltxt(p,x+22,y+50,title,26,{fill:color,"font-weight":700});
+  ltxt(p,x+22,y+92,lines,fs||21,{fill:"#1E2B2A"});
+}
+// 抗性與韌性：球與杯
+(function(){const R=$("rsvg");let g=sgIn(R,1);
+  const land="M80 230 C160 230 200 520 340 520 C470 520 500 360 560 360 C620 360 660 560 800 560 C920 560 950 230 1000 230";
+  el("path",{d:land+" L1000 660 L80 660 Z",fill:"#E6E2D2"},g);
+  el("path",{d:land,fill:"none",stroke:"#4A5755","stroke-width":5,"stroke-linecap":"round"},g);
+  txt(g,340,585,"水梯田",28,{"font-weight":700,fill:"#3F7F8A"}); txt(g,340,620,"有人耕作的狀態",18,{fill:"#4A5755"});
+  txt(g,800,615,"灌叢・次生林",28,{"font-weight":700,fill:"#4F7A4A"}); txt(g,800,648,"廢耕後的狀態",18,{fill:"#4A5755"});
+  el("path",{d:"M560 356 V250",stroke:"#B5452F","stroke-width":3,"stroke-dasharray":"6 6"},g);
+  txt(g,560,236,"門檻",26,{fill:"#B5452F","font-weight":700});
+  const ball=el("circle",{cx:340,cy:494,r:26,fill:"#C9962E",stroke:"#8A6440","stroke-width":3},g);
+  ball.innerHTML='<animateMotion dur="3.4s" repeatCount="indefinite" path="M0 0 Q80 -10 126 -67" keyPoints="0;1;0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>';
+  g=sgIn(R,2);
+  txt(g,250,330,"干擾",22,{fill:"#B5452F","font-weight":700});
+  el("path",{d:"M220 345 C220 420 260 470 304 486",fill:"none",stroke:"#B5452F","stroke-width":4,"marker-end":"url(#arF)"},g);
+  txt(g,250,300,"颱風・乾旱・人口外移",16,{fill:"#B5452F"});
+  g=sgIn(R,3);
+  ecard(g,1050,170,490,190,"#3F7F8A","抗性 resistance",["受到干擾時，不太改變的能力","例：田埂穩、溝圳通，豪雨來時","田不會崩"]);
+  g=sgIn(R,4);
+  ecard(g,1050,380,490,190,"#5E8C3A","韌性 resilience",["受到干擾後，恢復功能的能力","例：田崩了，有人會修、","有技術、有經費"]);
+  g=sgIn(R,5);
+  ecard(g,1050,590,490,220,"#B5452F","門檻 threshold",["跨過去，球就滾進另一個杯子","田埂崩、溝圳淤、灌叢長起來，","回頭的成本遠大於維持"]);
+  g=sgIn(R,6);
+  chip(g,175,720,"讓杯子變淺",{w:170,fs:20,h:44,fill:"#B5452F",stroke:"#B5452F",color:"#FFFFFF"});
+  ["農藥","化學肥料","福壽螺","水泥田埂"].forEach((s,i)=>chip(g,340+i*170,720,s,{w:150,fs:20,h:44,fill:"#FFFFFF",stroke:"#B5452F",color:"#B5452F"}));
+  chip(g,175,790,"把杯子挖深",{w:170,fs:20,h:44,fill:"#5E8C3A",stroke:"#5E8C3A",color:"#FFFFFF"});
+  ["農民","傳統耕具","生態給付","人禾基金會"].forEach((s,i)=>chip(g,340+i*170,790,s,{w:150,fs:20,h:44,fill:"#FFFFFF",stroke:"#5E8C3A",color:"#3E6B26"}));
+  ltxt(g,60,880,"參考：Holling (1973)；Cinner & Barnes (2019) 的球與杯示意",15,{fill:"#4A5755"});
+})();
+// 多樣性
+(function(){const D=$("vsvg");let g=sgIn(D,1);
+  ltxt(g,80,200,"生態：地景馬賽克",26,{fill:"#5E8C3A","font-weight":700});
+  el("rect",{x:80,y:225,width:680,height:330,rx:8,fill:"#EEF1E6",stroke:"#5E8C3A","stroke-width":2},g);
+  el("path",{d:"M80 233 Q80 225 88 225 H752 Q760 225 760 233 V285 Q600 300 420 280 Q250 262 80 292 Z",fill:"#3E6B47"},g);
+  [[140,262],[230,250],[330,266],[520,258],[640,262],[720,248]].forEach(([x,y])=>el("circle",{cx:x,cy:y,r:22,fill:"#2F5A3A"},g));
+  [[130,370],[165,345],[150,410],[190,390],[120,450]].forEach(([x,y])=>el("circle",{cx:x,cy:y,r:20,fill:"#6E9A48"},g));
+  [[330,250,690],[400,250,700],[470,250,710]].forEach(([y,x0,x1],i)=>{el("path",{d:`M${x0+i*20} ${y} Q${(x0+x1)/2} ${y-14} ${x1} ${y} L${x1} ${y+34} Q${(x0+x1)/2} ${y+20} ${x0+i*20} ${y+34} Z`,fill:"#7DAEB2"},g);
+    el("path",{d:`M${x0+i*20} ${y+34} Q${(x0+x1)/2} ${y+20} ${x1} ${y+34}`,fill:"none",stroke:"#8A6E4E","stroke-width":5},g);});
+  el("path",{d:"M728 320 C735 380 722 440 735 540",fill:"none",stroke:"#5E97A0","stroke-width":5,"stroke-dasharray":"10 7"},g);
+  [["次生林",420,256,"#F4F3ED"],["竹林",155,488,"#3E6B26"],["水田",470,359,"#1E2B2A"],["田埂",470,410,"#6B4A2E"],["溝渠",700,550,"#3F7F8A"]].forEach(([s,x,y,c])=>txt(g,x,y,s,18,{fill:c,"font-weight":700}));
+  g=sgIn(D,2);
+  ltxt(g,80,610,"地景異質性",23,{fill:"#5E8C3A","font-weight":700});
+  ltxt(g,80,645,["不同物種利用不同的棲地，整體的多樣性","比任何單一棲地都高"],20);
+  ltxt(g,80,735,"功能冗餘・反應多樣性",23,{fill:"#5E8C3A","font-weight":700});
+  ltxt(g,80,770,["同一個功能由多個物種負責，它們對干擾的","反應不同；一種受損，另一種補上（保險假說）"],20);
+  g=sgIn(D,3);
+  el("path",{d:"M820 200 V820",stroke:"#C9CCC4","stroke-width":2},g);
+  ltxt(g,870,200,"社會類比：收入的反應多樣性（示意）",26,{fill:"#A8741A","font-weight":700});
+  const rows=[["米價下跌",["分級保價收購","生態給付","和夥人預購"]],["颱風毀田",["生態給付","挖貝集資","公部門補助"]],["收成不好",["和夥人預購","生態給付","加工品"]]];
+  rows.forEach(([shock,keep],i)=>{const y=290+i*120, gg=sgIn(D,4+i);
+    chip(gg,955,y,shock,{w:170,fs:21,h:50,fill:"#FBEDEA",stroke:"#B5452F",color:"#B5452F"});
+    el("path",{d:`M1046 ${y} L1090 ${y}`,stroke:"#4A5755","stroke-width":3,"marker-end":"url(#arD)"},gg);
+    txt(gg,1068,y-14,"還有",15,{fill:"#4A5755"});
+    keep.forEach((k,j)=>chip(gg,1180+j*140,y,k,{w:128,fs:18,h:46,fill:"#FFFFFF",stroke:"#5E8C3A",color:"#3E6B26"}));
+    if(i===0)txt(gg,1320,y+44,"和禾米分三級保價收購，價格不跟市場走",15,{fill:"#3E6B26"});});
+  g=sgIn(D,7);
+  ltxt(g,870,660,["這是類比，不是同一件事：借用生態學的邏輯，","來看社會端的收入結構"],18,{fill:"#4A5755"});
+  g=sgIn(D,8);
+  el("rect",{x:860,y:740,width:680,height:80,rx:6,fill:"#5E8C3A"},g);
+  txt(g,1200,790,"來源越多元、反應越不同，系統越撐得住",25,{fill:"#FFFFFF","font-weight":700});
+})();
+// 適應循環
+(function(){const C=$("csvg");let g=sgIn(C,1);
+  el("path",{d:"M430 760 V215",stroke:"#4A5755","stroke-width":3,"marker-end":"url(#arD)"},g);
+  el("path",{d:"M430 760 H1175",stroke:"#4A5755","stroke-width":3,"marker-end":"url(#arD)"},g);
+  txt(g,400,480,"潛力",20,{fill:"#4A5755",transform:"rotate(-90 400 480)"});
+  txt(g,1140,795,"連結度",20,{fill:"#4A5755"});
+  const front={fill:"none",stroke:"#5E8C3A","stroke-width":6,"stroke-linecap":"round","marker-end":"url(#arD)"};
+  const back={fill:"none",stroke:"#B5452F","stroke-width":5,"stroke-dasharray":"12 9","stroke-linecap":"round","marker-end":"url(#arF)"};
+  el("path",{d:"M540 640 C700 660 900 280 1050 280",...front},g);
+  el("path",{d:"M1060 280 C1160 280 1170 600 1090 618",...back},g);
+  el("path",{d:"M1080 620 C900 640 720 300 570 300",...back},g);
+  el("path",{d:"M560 300 C460 300 450 620 532 638",...front},g);
+  txt(g,800,820,"實線：前環（慢、累積）　虛線：後環（快、重組）",16,{fill:"#4A5755"});
+  const ph=[["K","保守期","#6B5B95",1060,280,1200,190,["傳統農村運作穩定，但人口老化、","年輕人外移，系統越來越僵化"]],
+            ["Ω","釋放期","#B5452F",1085,625,1200,520,["梯田廢耕，田埂崩塌、溝圳淤塞，","演替開始"]],
+            ["α","重組期","#A8741A",560,300,60,190,["人禾進入，媒合外部資源，","新舊元素重新組合"]],
+            ["r","成長期","#5E8C3A",540,640,60,520,["友善耕作、品牌、推廣，","新的結構與資本逐漸累積"]]];
+  ph.forEach(([sym,name,c,px,py,cx,cy,lines],i)=>{const gg=sgIn(C,2+i);
+    el("circle",{cx:px,cy:py,r:30,fill:c,stroke:"#F4F3ED","stroke-width":4},gg);
+    txt(gg,px,py+11,sym,30,{fill:"#FFFFFF","font-weight":700});
+    ecard(gg,cx,cy,340,200,c,sym+"　"+name,lines,19);});
+  g=sgIn(C,6);
+  el("rect",{x:560,y:166,width:480,height:62,rx:6,fill:"#FFFFFF",stroke:"#6B5B95","stroke-width":2,"stroke-dasharray":"6 5"},g);
+  txt(g,800,192,"下一個要問的：進入新的保守期時，",18,{fill:"#6B5B95","font-weight":700});
+  txt(g,800,217,"這套結構會不會再次僵化？",18,{fill:"#6B5B95","font-weight":700});
+  ltxt(g,60,880,"參考：Holling, C. S. (2001). Ecosystems, 4, 390–405；Gunderson & Holling (2002). Panarchy.",15,{fill:"#4A5755"});
+})();
+
 /* ====== 評論與提問 ====== */
 function fillList(id,arr){const ol=$(id);ol.innerHTML="";
-  (arr.length?arr:["（待補）","（待補）","（待補）"]).forEach(t=>{const li=document.createElement("li");li.textContent=t;if(!arr.length)li.className="todo";ol.appendChild(li)})}
+  const list=arr.slice(); while(list.length<3)list.push(null);
+  list.forEach(t=>{const li=document.createElement("li");li.textContent=t||"（待補）";if(!t)li.className="todo";ol.appendChild(li)})}
 fillList("critList",CRITIQUE); fillList("qList",QUESTIONS);
+$("toTitle").textContent=TOURS.title; $("toSub").textContent=TOURS.sub; $("toSrc").textContent=TOURS.src;
+TOURS.list.forEach((t,i)=>{const d=document.createElement("div");d.className="spc";d.style.borderColor=t.c;d.style.transitionDelay=(i*0.35)+"s";
+  d.innerHTML=`<svg viewBox="-55 -55 110 110" aria-hidden="true"></svg><div><h3></h3><span class="sptag"></span><p></p></div>`;
+  drawArt(t.art,d.querySelector("svg")); d.querySelector("h3").textContent=t.name;
+  const tg=d.querySelector(".sptag"); tg.textContent=t.tag; tg.style.background=t.c; d.querySelector("p").textContent=t.text;
+  $("toGrid").appendChild(d);});
+{const d=document.createElement("div");d.className="spc sum";d.style.transitionDelay=(TOURS.list.length*0.35+0.4)+"s";
+  d.innerHTML="<h3></h3><p></p>";d.querySelector("h3").textContent=TOURS.sum[0];d.querySelector("p").textContent=TOURS.sum[1];$("toGrid").appendChild(d);}
+$("stTitle").textContent=STANCE.title; $("stSub").textContent=STANCE.sub; $("stSrc").textContent=STANCE.quoteSrc;
+STANCE.quotes.forEach(([q,who])=>{const d=document.createElement("p");d.className="stq";d.textContent="「"+q+"」";
+  if(who){const sm=document.createElement("small");sm.textContent="—— "+who;d.appendChild(sm)}$("stQuotes").appendChild(d)});
+STANCE.read.forEach(t=>{const d=document.createElement("p");d.className="str";d.textContent=t;$("stRead").appendChild(d)});
+STANCE.act.forEach(t=>{const li=document.createElement("li");li.textContent=t;$("stAct").appendChild(li)});
+$("stBandT").textContent=STANCE.band[0]; $("stBandS").textContent=STANCE.band[1];
 $("sTitle").textContent=SESMAP_TEXT[0]; $("sSub").textContent=SESMAP_TEXT[1];
 $("fTitle").textContent=REFLECT_TEXT[0]; $("fSub").textContent=REFLECT_TEXT[1];
 $("rTitle").textContent="資源盤點：用 SES 框架分類"; $("rSub").textContent="點一個事物，判斷它屬於哪個子系統"; $("rTotal").textContent=RTOTAL;
@@ -1019,6 +1339,7 @@ const STEPS=[
   {id:"title",l:"title"},
   {id:"globe",l:"globe",enter:enterGlobe},
   {id:"dry",l:"dry",enter(){later(()=>B.classList.add("dim"),1400);later(()=>setCap(TEXT.dryCap),2600)}},
+  {id:"succ",l:"dry",enter(){B.classList.add("dim")}},
   {id:"awake",l:"dry",enter(){
     B.classList.add("dim"); later(()=>B.classList.remove("dim"),100);
     later(()=>{$("bigqText").innerHTML=TEXT.awake;$("bigq").classList.add("on")},1400);
@@ -1027,9 +1348,14 @@ const STEPS=[
   {id:"hunt",l:"scene",enter(){setLandscape(false);renderHud();if(popQ.length&&!popping)nextPop()}},
   {id:"reveal",l:"scene",enter(){
     OKS.forEach(k=>found.add(k)); renderHud(); setLandscape(true,true);
-    later(()=>setCap(TEXT.revealCap,true),6200);}},
+    later(()=>setCap(TEXT.revealCap,true),7000);}},
+  {id:"resist",l:"resist",enter(){revealIn($("rsvg"),700)}},
+  {id:"divers",l:"divers",enter(){revealIn($("vsvg"),600)}},
   ...[1,2,3,4,5,6,7].map(d=>({id:"d"+d,l:"diagram",enter(){setLandscape(true,false);setDiagram(d)}})),
+  {id:"tours",l:"tours"},
+  {id:"cycle",l:"cycle",enter(){revealIn($("csvg"),900)}},
   {id:"ses",l:"sesmap",enter:()=>revealSes()},
+  {id:"stance",l:"stance"},
   {id:"reflect",l:"reflect"},
   {id:"playqr",l:"playqr"},
   {id:"explore",l:"scene",enter(){setLandscape(true,false);renderRes()}}

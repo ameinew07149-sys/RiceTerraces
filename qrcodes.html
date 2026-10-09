@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>貢寮水梯田｜列印 QR Code</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1E2B2A;--soft:#4A5755;--paper:#F4F3ED;--seal:#B5452F;--water:#5E97A0;box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--ink:#E9E7DF;--soft:#B4BDB9;--paper:#243030}}
+:root[data-theme="dark"]{--ink:#E9E7DF;--soft:#B4BDB9;--paper:#243030}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"LXGW WenKai TC","Noto Serif TC",serif}
+.bar{max-width:1000px;margin:0 auto;padding:20px;display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center}
+.bar h1{margin:0;font-size:28px;flex:1 1 100%}
+.bar p{margin:0;flex:1 1 100%;color:var(--soft);line-height:1.6}
+.bar label{font-size:17px}
+.bar button{font:inherit;font-size:17px;padding:8px 18px;border:2px solid var(--ink);background:var(--ink);color:var(--paper);border-radius:3px;cursor:pointer}
+.sheet{max-width:1000px;margin:0 auto;padding:0 20px 40px;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.tag{background:#fff;color:#1E2B2A;border:2px dashed #8A8F8C;padding:14px 12px 12px;text-align:center;break-inside:avoid}
+.tag .no{font-size:30px;font-weight:700;color:#B5452F;line-height:1}
+.tag .q{display:flex;justify-content:center;margin:10px 0 8px}
+.tag .q img,.tag .q canvas{width:170px!important;height:170px!important}
+.tag .nm{font-size:20px;font-weight:700;min-height:1.4em}
+.tag .ft{margin-top:4px;font-size:12px;color:#4A5755}
+.hide-names .nm{visibility:hidden}
+@media print{
+  @page{size:A4;margin:10mm}
+  body{background:#fff}
+  .bar{display:none}
+  .sheet{max-width:none;padding:0;grid-template-columns:repeat(3,1fr);gap:6mm}
+  .tag{padding:4mm}
+  .tag .q img,.tag .q canvas{width:48mm!important;height:48mm!important}
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+<div class="bar">
+  <h1>列印物件 QR Code</h1>
+  <p>剪下後貼在教室各處。加入用的 QR Code 不用印，它會顯示在投影幕上。手機用一般相機掃這些 QR Code 也能直接打開尋找頁。</p>
+  <label><input type="checkbox" id="showNames" checked> 印出物件名稱</label>
+  <button onclick="print()">列印</button>
+</div>
+<div class="sheet" id="sheet"></div>
+<script>
+const LIST=[["water","水"],["farmer","農民"],["tools","傳統耕具"],["wildlife","濕地生物"],["crop","作物"],
+ ["machine","大型機具"],["pesticide","農藥"],["fertilizer","化學肥料"],["concrete","水泥田埂"],["snail","福壽螺"]];
+// 編號打散，避免從編號猜出對錯
+const order=[4,9,1,7,3,10,6,2,8,5];
+const sheet=document.getElementById("sheet");
+LIST.map((x,i)=>[order[i],...x]).sort((a,b)=>a[0]-b[0]).forEach(([no,id,name])=>{
+  const u=new URL("scan.html",location.href);u.search="";u.hash="";u.searchParams.set("item",id);
+  const d=document.createElement("div");d.className="tag";
+  d.innerHTML=`<div class="no">${String(no).padStart(2,"0")}</div><div class="q"></div><div class="nm">${name}</div><div class="ft">貢寮水梯田｜找回土地上的事物</div>`;
+  sheet.appendChild(d);
+  if(window.QRCode)new QRCode(d.querySelector(".q"),{text:u.href,width:340,height:340,correctLevel:QRCode.CorrectLevel.M});
+  else d.querySelector(".q").textContent=u.href;
+});
+document.getElementById("showNames").onchange=e=>document.body.classList.toggle("hide-names",!e.target.checked);
+</script>
+</body>
+</html>

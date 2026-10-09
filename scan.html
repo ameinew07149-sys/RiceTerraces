@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>貢寮水梯田｜尋找</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1E2B2A;--soft:#4A5755;--paper:#F4F3ED;--grid:#DCE0D8;--seal:#B5452F;--water:#5E97A0;--rice:#5E8C3A;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--ink:#E9E7DF;--soft:#B4BDB9;--paper:#243030;--grid:#334240}}
+:root[data-theme="dark"]{--ink:#E9E7DF;--soft:#B4BDB9;--paper:#243030;--grid:#334240}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100vh;color:var(--ink);font-family:"LXGW WenKai TC","Noto Serif TC","PMingLiU",serif;
+  background-color:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px}
+main{max-width:520px;margin:0 auto;padding:22px 18px 48px}
+h1{margin:0;font-size:36px;letter-spacing:.06em;line-height:1.1}
+.sub{margin:4px 0 0;font-size:18px;letter-spacing:.12em}
+.meta{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin:16px 0 12px;font-size:16px;color:var(--soft)}
+.meta b{color:var(--ink)}
+.progress b{color:var(--rice);font-size:24px}
+.cam{position:relative;aspect-ratio:1/1;background:#2B3533;border:2.5px solid var(--ink);border-radius:4px;overflow:hidden}
+#reader{position:absolute;inset:0}
+#reader video{width:100%!important;height:100%!important;object-fit:cover}
+.camidle{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;text-align:center;color:#F4F3ED;font-size:18px;line-height:1.6}
+.camidle p{margin:0}
+.btn{display:block;width:100%;padding:14px;font:inherit;font-size:20px;border:2.5px solid var(--ink);border-radius:3px;background:var(--ink);color:var(--paper);cursor:pointer}
+.camidle .btn{background:#F4F3ED;color:#1E2B2A;border-color:#F4F3ED;max-width:260px}
+.btn:focus-visible,input:focus-visible{outline:3px solid var(--water);outline-offset:3px}
+.stop{margin-top:8px;background:transparent;color:var(--ink);font-size:16px;padding:8px}
+.result{display:none;margin:16px 0 0;padding:16px 18px;background:var(--paper);border:2.5px solid var(--ink);border-left-width:8px;border-radius:3px}
+.result.on{display:block;animation:pop .35s cubic-bezier(.3,1.5,.5,1)}
+@keyframes pop{from{transform:scale(.94);opacity:0}}
+.result.ok{border-color:var(--rice)}.result.dup{border-color:var(--water)}.result.err{border-color:var(--seal)}
+.result h2{margin:0 0 4px;font-size:26px;line-height:1.3}
+.result p{margin:0;font-size:17px;line-height:1.65}
+.hint{margin:0 0 12px;padding:10px 14px;border-left:5px solid var(--seal);background:rgba(181,69,47,.08);font-size:17px;line-height:1.6}
+.mine h3{margin:26px 0 8px;font-size:19px}
+.mine ul{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.mine li{padding:3px 10px;border:1.5px solid var(--seal);border-radius:2px;color:var(--seal);font-size:16px}
+.empty{margin:0;color:var(--soft);font-size:15px}
+label{display:block;margin-top:22px;font-size:19px}
+input{width:100%;margin:10px 0 14px;padding:12px;font:inherit;font-size:20px;border:2.5px solid var(--ink);border-radius:3px;background:#fff;color:#1E2B2A}
+.note{font-size:15px;line-height:1.6;color:var(--soft)}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion: reduce){*{animation:none!important}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="firebase-config.js"></script>
+</head>
+<body>
+<main>
+  <h1>貢寮水梯田</h1>
+  <p class="sub">找回土地上的事物</p>
+
+  <section id="sName" hidden>
+    <label for="nameIn">你的暱稱（找到東西時會顯示在投影幕上）</label>
+    <input id="nameIn" maxlength="10" placeholder="例如：阿梅" autocomplete="nickname">
+    <button class="btn" id="btnName">開始尋找</button>
+    <p class="note">不想留名也可以直接按開始，會顯示為「同學」。</p>
+  </section>
+
+  <section id="sMain" hidden>
+    <div class="meta">
+      <span>房間 <b id="roomTxt">—</b>　<span id="nameTxt"></span></span>
+      <span class="progress">全班找回 <b id="prog">0</b> / 5</span>
+    </div>
+    <p class="hint" id="joinHint" hidden>還沒加入教室：先掃描投影幕上的 QR Code。</p>
+    <p class="hint" id="syncHint" hidden>還沒連上投影幕（Firebase 尚未設定），掃到的東西不會出現在投影幕上。</p>
+    <div class="cam">
+      <div id="reader"></div>
+      <div class="camidle" id="camIdle">
+        <p>在教室裡找到 QR Code，<br>打開相機對準它。</p>
+        <button class="btn" id="btnCam">開啟相機</button>
+      </div>
+    </div>
+    <button class="btn stop" id="btnStop" hidden>關閉相機</button>
+    <div class="result" id="result" role="status" aria-live="polite"><h2 id="rTitle"></h2><p id="rText"></p></div>
+    <div class="mine">
+      <h3>我找到的</h3>
+      <ul id="mineList"></ul>
+      <p class="empty" id="mineEmpty">還沒有，去教室裡找找看！</p>
+    </div>
+  </section>
+</main>
+
+<script>
+const NAMES={water:"水",farmer:"農民",tools:"傳統耕具",wildlife:"濕地生物",crop:"作物",
+  machine:"大型機具",pesticide:"農藥",fertilizer:"化學肥料",concrete:"水泥田埂",snail:"福壽螺"};
+const OK=new Set(["water","farmer","tools","wildlife","crop"]);
+const $=id=>document.getElementById(id);
+const store={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
+
+const url=new URL(location.href);
+let room=(url.searchParams.get("room")||store.get("gl-room")||"").toUpperCase();
+if(url.searchParams.get("room"))store.set("gl-room",room);
+let pendingItem=url.searchParams.get("item");
+if(url.searchParams.has("item")){url.searchParams.delete("item");try{history.replaceState(null,"",url)}catch(e){}}
+let name=store.get("gl-name");
+const uid=store.get("gl-uid")||(()=>{const u=Math.random().toString(36).slice(2,10);store.set("gl-uid",u);return u})();
+let mine=[], state={found:[]}, stateLoaded=false;
+let db=null, roomRef=null, offRoom=null;
+
+/* ---- Firebase ---- */
+(function(){const cfg=window.FIREBASE_CONFIG;
+  if(window.firebase&&cfg&&cfg.databaseURL){try{if(!firebase.apps.length)firebase.initializeApp(cfg);db=firebase.database()}catch(e){console.error(e)}}
+})();
+function connect(){
+  if(offRoom){offRoom();offRoom=null}
+  stateLoaded=false; roomRef=null;
+  if(!room||!db)return;
+  roomRef=db.ref("rooms/"+room);
+  const sRef=roomRef.child("state");
+  const onState=s=>{const v=s.val();state={found:(v&&v.found)||[]};
+    $("prog").textContent=state.found.length;
+    if(!stateLoaded){stateLoaded=true;if(pendingItem&&name!==null){const p=pendingItem;pendingItem=null;handleItem(p)}}};
+  sRef.on("value",onState);
+  offRoom=()=>sRef.off("value",onState);
+  if(name!==null){const p=roomRef.child("players/"+uid);p.set({name:name||"同學",t:firebase.database.ServerValue.TIMESTAMP});p.onDisconnect().remove();}
+}
+
+/* ---- 畫面 ---- */
+function loadMine(){try{mine=JSON.parse(store.get("gl-mine-"+room)||"[]")}catch(e){mine=[]}renderMine()}
+function renderMine(){const ul=$("mineList");ul.innerHTML="";
+  mine.forEach(id=>{const li=document.createElement("li");li.textContent=NAMES[id]||id;ul.appendChild(li)});
+  $("mineEmpty").hidden=mine.length>0;}
+function route(){
+  const needName=room&&name===null;
+  $("sName").hidden=!needName; $("sMain").hidden=needName;
+  $("roomTxt").textContent=room||"—"; $("nameTxt").textContent=name?name:"";
+  $("joinHint").hidden=!!room; $("syncHint").hidden=!room||!!db;
+  if(needName)setTimeout(()=>$("nameIn").focus(),50);
+}
+let rT=null;
+function show(kind,title,text){const r=$("result");r.className="result "+kind;void r.offsetWidth;r.classList.add("on");
+  $("rTitle").textContent=title;$("rText").textContent=text;clearTimeout(rT);
+  if(kind==="ok"&&navigator.vibrate)navigator.vibrate(80);}
+
+$("btnName").onclick=()=>{name=$("nameIn").value.trim().slice(0,10);store.set("gl-name",name);route();connect();
+  if(pendingItem&&!db){const p=pendingItem;pendingItem=null;handleItem(p)}};
+$("nameIn").addEventListener("keydown",e=>{if(e.key==="Enter")$("btnName").click()});
+
+/* ---- 掃描結果 ---- */
+function handleText(text){
+  let id=null,r=null;
+  try{const u=new URL(text);r=(u.searchParams.get("room")||"").toUpperCase()||null;id=u.searchParams.get("item")}
+  catch(e){id=String(text).trim()}
+  if(r&&!id){
+    if(r===room)return show("dup","你已經在房間 "+r+" 裡了","接下來去教室裡找藏起來的 QR Code 吧！");
+    room=r;store.set("gl-room",r);loadMine();route();connect();
+    return show("ok","加入房間 "+r,name===null?"先輸入暱稱，就可以開始尋找。":"去教室裡找藏起來的 QR Code 吧！");
+  }
+  if(r&&id&&r!==room){room=r;store.set("gl-room",r);loadMine();route();connect();}
+  handleItem(id);
+}
+function handleItem(id){
+  if(!id||!NAMES[id])return show("err","這不是遊戲裡的 QR Code","再找找看，遊戲用的 QR Code 上有編號。");
+  if(!room){pendingItem=id;return show("err","你找到了一個東西，但還沒加入教室","先掃描投影幕上的 QR Code 加入，它會自動送出。");}
+  if(name===null){pendingItem=id;route();return;}
+  if(OK.has(id)&&state.found.includes(id))return show("dup","「"+NAMES[id]+"」已經找回來了","它已經回到田裡，再找找別的吧！");
+  if(!roomRef)return show("err","找到「"+NAMES[id]+"」，但沒連上投影幕","Firebase 還沒設定，請告訴老師。");
+  roomRef.child("scans").push({id,by:name||"同學",uid,t:firebase.database.ServerValue.TIMESTAMP})
+    .catch(()=>show("err","送出失敗","網路好像不穩，請再掃一次。"));
+  if(!OK.has(id))return show("err","不對，再想想。","「"+NAMES[id]+"」不是這塊土地需要的東西，再去找找看。");
+  if(!mine.includes(id)){mine.push(id);store.set("gl-mine-"+room,JSON.stringify(mine));renderMine();}
+  show("ok","你找回了「"+NAMES[id]+"」！","抬頭看投影幕，它正回到水梯田上。");
+}
+window.handleText=handleText;
+
+/* ---- 相機 ---- */
+let qr=null,cooling=false,lastText="",lastAt=0;
+function onDecode(text){const now=Date.now();
+  if(cooling||(text===lastText&&now-lastAt<6000))return;
+  lastText=text;lastAt=now;cooling=true;setTimeout(()=>cooling=false,2200);handleText(text);}
+$("btnCam").onclick=async()=>{
+  if(!window.Html5Qrcode)return show("err","相機元件沒有載入","請確認網路後重新整理頁面。");
+  qr=qr||new Html5Qrcode("reader",{verbose:false});
+  try{
+    await qr.start({facingMode:"environment"},{fps:10,qrbox:(w,h)=>{const s=Math.floor(Math.min(w,h)*.72);return{width:s,height:s}}},onDecode,()=>{});
+    $("camIdle").hidden=true;$("btnStop").hidden=false;
+  }catch(e){show("err","沒辦法開啟相機","請允許瀏覽器使用相機。如果是從 LINE 打開的，請點右上角改用 Safari 或 Chrome 開啟。")}
+};
+$("btnStop").onclick=async()=>{try{await qr.stop()}catch(e){}$("camIdle").hidden=false;$("btnStop").hidden=true;};
+
+/* ---- 開始 ---- */
+loadMine(); route(); connect();
+if(pendingItem&&room&&name!==null&&!db){const p=pendingItem;pendingItem=null;handleItem(p)}
+if(pendingItem&&!room)handleItem(pendingItem);
+</script>
+</body>
+</html>

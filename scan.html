@@ -37,6 +37,31 @@ h1{margin:0;font-size:36px;letter-spacing:.06em;line-height:1.1}
 .result.ok{border-color:var(--rice)}.result.dup{border-color:var(--water)}.result.err{border-color:var(--seal)}
 .result h2{margin:0 0 4px;font-size:26px;line-height:1.3}
 .result p{margin:0;font-size:17px;line-height:1.65}
+.vote{position:fixed;inset:0;z-index:20;display:none;flex-direction:column;justify-content:center;gap:14px;
+  padding:calc(env(safe-area-inset-top,0px) + 20px) 18px calc(env(safe-area-inset-bottom,0px) + 20px);
+  background-color:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px}
+.vote.on{display:flex;animation:pop .35s cubic-bezier(.3,1.5,.5,1)}
+.vote>*{width:100%;max-width:480px;margin-left:auto;margin-right:auto}
+.vhead{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.vby{margin:0;font-size:16px;color:var(--soft)}
+.vote h2{margin:2px 0 0;font-size:36px;line-height:1.2}
+.vpic{width:64px;height:64px;flex:none;object-fit:contain}
+.vote h2{font-size:28px!important;white-space:nowrap}
+.vclock{flex:none;width:68px;height:68px;border-radius:50%;border:4px solid var(--ink);display:grid;place-items:center;font-size:32px;font-weight:700;font-variant-numeric:tabular-nums}
+.vclock.low{border-color:var(--seal);color:var(--seal)}
+.vq{margin:0;padding:10px 14px;border-left:6px solid var(--water);background:rgba(94,151,160,.12);font-size:22px;font-weight:700;line-height:1.45}
+.vq em{font-style:normal;color:var(--water)}
+.vbtns{display:grid;gap:12px}
+.vbtn{width:100%;padding:22px 12px;font:inherit;font-size:28px;font-weight:700;border:3px solid var(--ink);border-radius:4px;background:transparent;color:var(--ink);cursor:pointer}
+.vbtn.yes.sel{background:var(--rice);border-color:var(--rice);color:#fff}
+.vbtn.no.sel{background:var(--seal);border-color:var(--seal);color:#fff}
+.vbtn:disabled{cursor:default}
+.vote.closed .vbtn:not(.sel){opacity:.35}
+.vnote{margin:0;font-size:16px;color:var(--soft);text-align:center}
+.vres{display:none;margin:0;padding:14px 16px;border:2.5px solid var(--ink);border-left-width:8px;border-radius:3px;font-size:18px;line-height:1.6}
+.vres b{display:block;font-size:26px}
+.vote.closed .vres{display:block}
+.vres.right{border-color:var(--rice)}.vres.wrong{border-color:var(--seal)}
 .hint{margin:0 0 12px;padding:10px 14px;border-left:5px solid var(--seal);background:rgba(181,69,47,.08);font-size:17px;line-height:1.6}
 .mine h3{margin:26px 0 8px;font-size:19px}
 .mine ul{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
@@ -88,10 +113,19 @@ input{width:100%;margin:10px 0 14px;padding:12px;font:inherit;font-size:20px;bor
     </div>
   </section>
 </main>
+<section class="vote" id="vote" role="dialog" aria-modal="true" aria-labelledby="vName">
+  <div class="vhead"><img class="vpic" id="vPic" alt=""><div style="flex:1"><p class="vby" id="vBy"></p><h2 id="vName"></h2></div><div class="vclock" id="vClock">10</div></div>
+  <p class="vq">對<em>維持水梯田濕地生態</em>，這個需要嗎？</p>
+  <div class="vbtns"><button class="vbtn yes" id="vYes">需要</button><button class="vbtn no" id="vNo">不需要</button></div>
+  <p class="vnote" id="vNote">全班一起作答，倒數結束前都可以改</p>
+  <div class="vres" id="vRes"></div>
+</section>
 
 <script>
-const NAMES={water:"水",farmer:"農民",tools:"傳統耕具",wildlife:"濕地生物",crop:"作物",
+const NAMES={water:"雨水與山泉",farmer:"農民",tools:"傳統耕具",wildlife:"濕地生物",crop:"作物",
   machine:"大型機具",pesticide:"農藥",fertilizer:"化學肥料",concrete:"水泥田埂",snail:"福壽螺"};
+const PIC={water:"water.webp",farmer:"farmer.webp",tools:"tools.webp",wildlife:"wildlife.webp",crop:"crop.svg",
+  machine:"machine.webp",pesticide:"pesticide.webp",fertilizer:"fertilizer.webp",concrete:"concrete.svg",snail:"snail.webp"};
 const OK=new Set(["water","farmer","tools","wildlife","crop"]);
 const $=id=>document.getElementById(id);
 const store={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
@@ -121,6 +155,7 @@ function connect(){
     if(!stateLoaded){stateLoaded=true;if(pendingItem&&name!==null){const p=pendingItem;pendingItem=null;handleItem(p)}}};
   sRef.on("value",onState);
   offRoom=()=>sRef.off("value",onState);
+  listenVote();
   if(name!==null){const p=roomRef.child("players/"+uid);p.set({name:name||"同學",t:firebase.database.ServerValue.TIMESTAMP});p.onDisconnect().remove();}
 }
 
@@ -166,10 +201,58 @@ function handleItem(id){
   if(!roomRef)return show("err","找到「"+NAMES[id]+"」，但沒連上投影幕","Firebase 還沒設定，請告訴老師。");
   roomRef.child("scans").push({id,by:name||"同學",uid,t:firebase.database.ServerValue.TIMESTAMP})
     .catch(()=>show("err","送出失敗","網路好像不穩，請再掃一次。"));
-  if(!OK.has(id))return show("err","不對，再想想。","「"+NAMES[id]+"」不是這塊土地需要的東西，再去找找看。");
-  if(!mine.includes(id)){mine.push(id);store.set("gl-mine-"+room,JSON.stringify(mine));renderMine();}
-  show("ok","你找回了「"+NAMES[id]+"」！","抬頭看投影幕，它正回到水梯田上。");
+  if(OK.has(id)&&!mine.includes(id)){mine.push(id);store.set("gl-mine-"+room,JSON.stringify(mine));renderMine();}
+  show("ok","你找到了「"+NAMES[id]+"」！","抬頭看投影幕，全班一起用手機判斷它需不需要。");
 }
+/* ---- 全班投票：投影幕發起，每支手機都會跳出來 ---- */
+let vCur=null, vPick=null, vLeft=0, vTick=null, vHide=null, offVote=null;
+function listenVote(){
+  if(offVote){offVote();offVote=null}
+  if(!roomRef)return;
+  const r=roomRef.child("vote"); let first=true;
+  const cb=s=>{const v=s.val(); const wasFirst=first; first=false;
+    if(!v||!v.vid)return;
+    if(v.open&&v.vid!==vCur)return openVote(v);
+    if(!v.open&&v.vid===vCur&&!$("vote").classList.contains("closed"))return closeVote(v);
+    if(wasFirst)return;};
+  r.on("value",cb); offVote=()=>r.off("value",cb);
+}
+function openVote(v){
+  vCur=v.vid; vPick=null; clearInterval(vTick); clearTimeout(vHide);
+  const V=$("vote"); V.classList.remove("closed");
+  $("vName").textContent="「"+v.name+"」"; $("vPic").src=PIC[v.id]?"img/items/"+PIC[v.id]:""; $("vPic").hidden=!PIC[v.id]; $("vBy").textContent=(v.by||"有人")+" 找到了";
+  ["vYes","vNo"].forEach(k=>{$(k).classList.remove("sel");$(k).disabled=false});
+  $("vNote").textContent="全班一起作答，倒數結束前都可以改"; $("vRes").className="vres"; $("vRes").innerHTML="";
+  vLeft=v.dur||10; const clock=()=>{$("vClock").textContent=Math.max(0,vLeft);$("vClock").classList.toggle("low",vLeft<=3)};
+  clock(); vTick=setInterval(()=>{vLeft--;clock();if(vLeft<=0)clearInterval(vTick)},1000);
+  V.classList.remove("on"); void V.offsetWidth; V.classList.add("on");
+  if(navigator.vibrate)navigator.vibrate([60,40,60]);
+}
+function pick(c){
+  if(!vCur||$("vote").classList.contains("closed")||!roomRef)return;
+  vPick=c; $("vYes").classList.toggle("sel",c==="yes"); $("vNo").classList.toggle("sel",c==="no");
+  $("vNote").textContent="已作答，倒數結束前還可以改";
+  roomRef.child("votes/"+vCur+"/"+uid).set(c).catch(()=>{});
+}
+function closeVote(v){
+  clearInterval(vTick); $("vClock").textContent="0";
+  const V=$("vote"); V.classList.add("closed"); ["vYes","vNo"].forEach(k=>$(k).disabled=true);
+  const ans=v.answer, R=$("vRes");
+  const head=document.createElement("b"); head.textContent="答案："+(ans==="yes"?"需要":ans==="no"?"不需要":"—")+(ans&&v.note?"（"+v.note+"）":"");
+  const tally=(v.yes!=null)?"全班：需要 "+v.yes+" 人・不需要 "+v.no+" 人":"";
+  let mine;
+  if(!ans)mine="這一題中途結束了";
+  else if(!vPick)mine="你這題沒有作答";
+  else if(vPick===ans){mine="你答對了！";R.classList.add("right")}
+  else {mine="你答錯了，看看投影幕上的說明";R.classList.add("wrong")}
+  R.innerHTML=""; R.appendChild(head); R.append(mine); if(tally){R.appendChild(document.createElement("br"));R.append(tally)}
+  $("vNote").textContent="";
+  vHide=setTimeout(()=>V.classList.remove("on"),4500);
+}
+$("vYes").onclick=()=>pick("yes");
+$("vNo").onclick=()=>pick("no");
+$("vote").addEventListener("click",e=>{if(e.target.id==="vote"&&V_closed())$("vote").classList.remove("on")});
+function V_closed(){return $("vote").classList.contains("closed")}
 window.handleText=handleText;
 
 /* ---- 相機 ---- */

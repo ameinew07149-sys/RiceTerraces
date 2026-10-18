@@ -114,7 +114,7 @@ input{width:100%;margin:10px 0 14px;padding:12px;font:inherit;font-size:20px;bor
   </section>
 </main>
 <section class="vote" id="vote" role="dialog" aria-modal="true" aria-labelledby="vName">
-  <div class="vhead"><img class="vpic" id="vPic" alt=""><div style="flex:1"><p class="vby" id="vBy"></p><h2 id="vName"></h2></div><div class="vclock" id="vClock">10</div></div>
+  <div class="vhead"><img class="vpic" id="vPic" alt=""><div style="flex:1"><p class="vby" id="vBy"></p><h2 id="vName"></h2></div><div class="vclock" id="vClock">7</div></div>
   <p class="vq">對<em>維持水梯田濕地生態</em>，這個需要嗎？</p>
   <div class="vbtns"><button class="vbtn yes" id="vYes">需要</button><button class="vbtn no" id="vNo">不需要</button></div>
   <p class="vnote" id="vNote">全班一起作答，倒數結束前都可以改</p>
@@ -223,7 +223,7 @@ function openVote(v){
   $("vName").textContent="「"+v.name+"」"; $("vPic").src=PIC[v.id]?"img/items/"+PIC[v.id]:""; $("vPic").hidden=!PIC[v.id]; $("vBy").textContent=(v.by||"有人")+" 找到了";
   ["vYes","vNo"].forEach(k=>{$(k).classList.remove("sel");$(k).disabled=false});
   $("vNote").textContent="全班一起作答，倒數結束前都可以改"; $("vRes").className="vres"; $("vRes").innerHTML="";
-  vLeft=v.dur||10; const clock=()=>{$("vClock").textContent=Math.max(0,vLeft);$("vClock").classList.toggle("low",vLeft<=3)};
+  vLeft=v.dur||7; const clock=()=>{$("vClock").textContent=Math.max(0,vLeft);$("vClock").classList.toggle("low",vLeft<=3)};
   clock(); vTick=setInterval(()=>{vLeft--;clock();if(vLeft<=0)clearInterval(vTick)},1000);
   V.classList.remove("on"); void V.offsetWidth; V.classList.add("on");
   if(navigator.vibrate)navigator.vibrate([60,40,60]);

@@ -65,6 +65,7 @@ button:focus-visible{outline:3px solid var(--water);outline-offset:3px}
 #titleSlide .row{display:flex;align-items:center;gap:.6em;margin-top:.5em}
 #titleSlide .stamp{display:inline-block;padding:.1em .45em;font-size:clamp(26px,3vw,50px);font-weight:700;color:var(--paper);background:var(--seal);transform:rotate(-3deg);border-radius:3px}
 #titleSlide .row span{font-size:clamp(18px,1.7vw,28px);color:var(--ink-soft);letter-spacing:.1em}
+#titleSlide .row span.stamp{font-size:clamp(26px,3vw,50px);color:#FFFFFF;letter-spacing:.06em}
 #titleSlide .lines{position:absolute;right:clamp(24px,6vw,120px);bottom:clamp(24px,8vh,90px);width:min(38vw,560px);opacity:.9}
 
 /* ===== 2 地球 ===== */
@@ -170,6 +171,13 @@ body[data-s="hunt"] .hud{opacity:1}
 .slot b{display:block;font-size:clamp(14px,1.2vw,19px);min-height:1.5em}
 .slot .q[hidden]{display:none}
 .slot.on{border-style:solid;border-color:var(--seal);background:rgba(244,243,237,.95);transform:translateY(-6px)}
+.hud .htimer{position:absolute;left:clamp(16px,3vw,48px);top:calc(clamp(14px,3vh,40px) + clamp(90px,10vw,150px));pointer-events:auto;cursor:pointer;
+  padding:.25em .7em;font:inherit;font-size:clamp(20px,1.8vw,30px);color:var(--ink);background:rgba(244,243,237,.9);border:2px solid var(--ink);border-radius:4px}
+.hud .htimer b{font-variant-numeric:tabular-nums}
+.hud .htimer.paused{opacity:.6}
+.hud .htimer.warn{border-color:#C9962E;color:#8A6440}
+.hud .htimer.done{border-color:var(--seal);color:#fff;background:var(--seal);animation:tblink 1.2s ease-in-out infinite}
+@keyframes tblink{50%{opacity:.55}}
 .hud .count{position:absolute;right:clamp(16px,2vw,32px);bottom:clamp(14px,3vh,36px);font-size:clamp(18px,1.6vw,26px)}
 .hud .count b{font-size:2em;color:var(--seal)}
 .hud .mini{position:absolute;right:clamp(12px,2vw,32px);top:clamp(12px,2.5vh,32px);display:flex;align-items:center;gap:10px;padding:8px 10px;background:rgba(244,243,237,.9);border:1.5px solid var(--ink-soft);border-radius:3px;font-size:15px;line-height:1.5;color:var(--ink-soft)}
@@ -264,6 +272,8 @@ body[data-s="explore"] .rhead,body[data-s="explore"] .rnotes{display:block}
 .rchips{display:flex;flex-wrap:wrap;gap:4px}
 .rchip{font-size:13px;padding:1px 7px;border:1.5px dashed var(--ink-soft);border-radius:2px;color:transparent;user-select:none;transition:.5s}
 .rchip.on{border-style:solid;color:#fff}
+.rchip.pop{animation:chippop 1.1s ease-out}
+@keyframes chippop{0%{transform:scale(1.6);box-shadow:0 0 0 0 rgba(201,150,46,.9)}60%{transform:scale(1)}100%{box-shadow:0 0 0 10px rgba(201,150,46,0)}}
 .rtools{display:flex;align-items:center;gap:10px;margin-top:10px;padding-top:10px;border-top:1.5px solid var(--ink-soft);font-size:13px;color:var(--ink-soft);line-height:1.5}
 .rtools #playQr{background:#fff;padding:3px;border:1px solid var(--ink-soft)}
 .rtools img,.rtools canvas{width:72px!important;height:auto!important;display:block}
@@ -358,6 +368,8 @@ body[data-s="sesfind"] .st3{transition-delay:2.4s}
 body[data-s="sesfind"] .stband{opacity:1}
 #sesfind .st1{border-top-color:#3E6B26}#sesfind .st2{border-top-color:#B07A1E}#sesfind .st3{border-top-color:#6B5A9E}
 #sesfind .stband{background:#3E6B26}
+#sesfind .stc p.str{font-size:clamp(16px,1.42vw,24px);margin-bottom:.6em}
+.stc p.sfv{margin:.2em 0 .6em;padding:.45em .7em;border-left:4px solid #6B5B95;background:rgba(107,91,149,.08);font-size:clamp(14px,1.15vw,19px);line-height:1.5;color:#3D3260;font-weight:700}
 .stc p.sfk{margin:0 0 .5em;font-size:clamp(14px,1.1vw,18px);font-weight:700;color:var(--ink-soft);letter-spacing:.06em}
 .stband b{font-size:clamp(22px,2.2vw,36px)}
 .stband span{font-size:clamp(16px,1.5vw,25px);line-height:1.5}
@@ -374,7 +386,7 @@ body.play .nav{display:none}
 
 /* ===== 評論與提問 ===== */
 .refs{position:absolute;left:clamp(16px,3vw,48px);right:clamp(16px,3vw,48px);top:clamp(120px,17vh,160px);bottom:clamp(24px,5vh,56px);
-  display:grid;grid-template-columns:.95fr 1.6fr .75fr;gap:clamp(12px,1.4vw,24px)}
+  display:grid;grid-template-columns:1.2fr 1.5fr .8fr;gap:clamp(12px,1.4vw,24px)}
 .refs .rcol{padding:clamp(12px,1.4vw,22px)}
 .refs .rcol h3{font-size:clamp(18px,1.6vw,26px);margin-bottom:.5em}
 .refs ul{margin:0;padding:0;list-style:none}
@@ -400,7 +412,25 @@ body.play .nav{display:none}
 
 @media (max-width:760px){
   body[data-s="explore"] #rgrid{display:grid}
-  body[data-s="explore"] .rnotes,body[data-s="explore"] #rseals{display:none}
+  body[data-s="explore"] #rseals{display:none}
+  /* 手機：上方標題、中間 SES 分類板（即時歸位）、下方事物格 */
+  .rhead{left:14px;right:14px;top:calc(env(safe-area-inset-top,0px) + 10px)}
+  .rhead h2{font-size:22px}
+  .rhead p{font-size:13px}
+  body[data-s="explore"] .rnotes{display:block;left:10px;right:10px;width:auto;top:calc(env(safe-area-inset-top,0px) + 72px);
+    max-height:36vh;padding:8px 10px;transform:none;box-shadow:0 2px 0 rgba(30,43,42,.15)}
+  .rnotes h3{display:none}
+  #rGroups{display:grid;grid-template-columns:1fr 1fr;gap:2px 10px}
+  .rgroup{margin:0 0 4px}
+  .rgroup h4{font-size:12.5px;margin:0 0 2px}
+  .rnotes .code{font-size:11px}
+  .rchip{font-size:11.5px;padding:0 5px}
+  .rtools{margin-top:4px;padding-top:6px;font-size:12px}
+  .rtools button{padding:3px 8px;font-size:12px}
+  #rgrid{top:calc(env(safe-area-inset-top,0px) + 72px + 36vh + 8px);grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:6px;padding:8px}
+  .rtile{font-size:13px;padding:6px 3px}
+  .rtile svg{width:46px;height:46px}
+  .cap.paperish{top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);white-space:normal;width:88vw;font-size:17px;line-height:1.5;z-index:20}
   .refl{grid-template-columns:1fr;overflow:auto}
 }
 
@@ -668,6 +698,7 @@ body[data-l="globe"] #globe{pointer-events:auto}
   <div class="htitle"><h2 id="hTitle"></h2><p id="hSub"></p></div>
   <div class="mini"><div id="miniQr"></div><span>還沒加入？<br>用手機掃這裡<br>房間 <b id="roomMini"></b></span></div>
   <div class="slots" id="slots"></div>
+  <button class="htimer" id="hTimer" title="點一下重新計時">⏱ <b id="hTimerT">3:00</b></button>
   <div class="count">找回 <b id="countNum">0</b> / <span id="countTotal">5</span></div>
 </div>
 
@@ -691,7 +722,7 @@ body[data-l="globe"] #globe{pointer-events:auto}
   <div class="vtop">
     <svg class="vart" id="vArt" viewBox="-50 -50 100 100" aria-hidden="true"></svg>
     <div><p class="vby" id="vBy"></p><h2 id="vName"></h2></div>
-    <div class="vclock" id="vClock">10</div>
+    <div class="vclock" id="vClock">7</div>
   </div>
   <p class="vq">對<em>維持水梯田濕地生態</em>，這個需要嗎？</p>
   <div class="vbars">
@@ -753,7 +784,8 @@ const TEXT={
   awake:"把土地上該有的事物<br>一個個找回來吧？",
   huntTitle:"把土地上該有的事物找回來",
   huntSub:"到教室各個角落找找看，掃到東西後，全班一起用手機判斷需不需要",
-  revealCap:"土地上的事物彼此連結，水梯田的居民也跟著回來了"
+  revealCap:"土地上的事物彼此連結，水梯田的居民也跟著回來了",
+  revealCap2:"我們沒有選「更多」，只選了「剛好」"
 };
 // 貢寮水梯田的座標（地球縮放的終點，可自行微調）
 const GONGLIAO=[121.89175,24.97346];   // 內寮溪水梯田 [經度, 緯度]
@@ -789,10 +821,10 @@ const ITEMS={
   crop:{name:"作物",ok:true,pos:[580,556],
     text:"友善耕作的稻米讓田有收成，農民才能繼續種下去。"},
 
-  machine:{name:"大型機具",ok:false,text:"開不進窄小的梯田，外地機具還可能夾帶福壽螺。生產班規範機械以 12 馬力以下為原則。"},
-  pesticide:{name:"農藥",ok:false,text:"會毒死濕地生物，而且水一層層往下流，影響不只一塊田。"},
-  fertilizer:{name:"化學肥料",ok:false,ansNote:"但未全面禁止",text:"養分隨水流下會讓水體優養化。但生產班並未全面禁止：田蠳米可少量使用，等級越高越少，阿獴米完全不用。"},
-  concrete:{name:"水泥田埂",ok:false,text:"棲地變得單一，生物無處躲藏，掉進水泥溝也爬不出來。"},
+  machine:{name:"大型機具",ok:false,text:"能省工、擴大耕作面積，但窄田開不進去，外地機具還可能夾帶福壽螺。生產班規範機械以 12 馬力以下為原則。"},
+  pesticide:{name:"農藥",ok:false,text:"能減少病蟲害、穩住產量，但會毒死濕地生物，而且水一層層往下流，影響不只一塊田。"},
+  fertilizer:{name:"化學肥料",ok:false,ansNote:"但未全面禁止",text:"能增產，但養分隨水流下會讓水體優養化。生產班並未全面禁止：田蠳米可少量使用，等級越高越少，阿獴米完全不用。"},
+  concrete:{name:"水泥田埂",ok:false,text:"堅固、省下修田埂的人力，但棲地變得單一，生物無處躲藏，掉進水泥溝也爬不出來。"},
   snail:{name:"福壽螺",ok:false,text:"外來種，會啃食秧苗。這裡不用大型機具、自己育平林種秧苗，福壽螺沒有機會隨機器和秧苗傳進來，田裡沒有福壽螺。"}
 };
 
@@ -812,11 +844,11 @@ const DHEAD=[
   ["中介者：人禾環境倫理發展基金會","連結許多外部資源，打造以社區為中心的模式"],
   ["媒合外部資源","林保署、國發會、農改場、挖貝募資、肯夢 AVEDA"],
   ["資源進入場域","經由中介者，讓資源真正落到這片水梯田"],
-  ["場域的成果","生態保育報告・傳統農業文化保存・地方創生發展"],
   ["緊密的連結與循環","和土地上的事物一起，形成彼此支撐的循環"],
+  ["場域的成果","生態保育報告・傳統農業文化保存・地方創生發展"],
   ["產出","從這片田長出來的東西：和禾米與狸和禾小穀倉"],
   ["推廣","紀錄片與出版品，讓更多人認識這片水梯田"],
-  ["綠色旅遊","既是推廣，也是收入：讓人走進田裡，收益回到地方"],
+  ["綠色旅遊","既是推廣，也是收入：由在地人帶路認識水梯田，收益回到地方"],
   ["民眾的支持","看見之後，用購買、預購、集資與參與回饋這片田"]
 ];
 
@@ -856,14 +888,15 @@ const ECO_PERF=["韌性","生物多樣性"];   // Ostrom (2009) 的 O2 生態績
 // 參考資料頁：[欄位標題, [條目…]]；條目可用 <i></i> 標斜體
 const REFS=[
   ["理論文獻",[
+    "Ostrom, E. (1990). <i>Governing the commons</i>. Cambridge University Press.",
+    "Ostrom, E. (2007). A diagnostic approach for going beyond panaceas. <i>PNAS, 104</i>(39), 15181–15187.",
     "Ostrom, E. (2009). A general framework for analyzing sustainability of social-ecological systems. <i>Science, 325</i>(5939), 419–422.",
     "McGinnis, M. D., & Ostrom, E. (2014). Social-ecological system framework: Initial changes and continuing challenges. <i>Ecology and Society, 19</i>(2), 30.",
     "Holling, C. S. (1973). Resilience and stability of ecological systems. <i>Annual Review of Ecology and Systematics, 4</i>, 1–23.",
     "Epstein, G., et al. (2013). Missing ecology: Integrating ecological perspectives with the social-ecological system framework. <i>International Journal of the Commons, 7</i>(2), 432–453.",
     "Gunderson, L. H., & Holling, C. S. (Eds.). (2002). <i>Panarchy</i>. Island Press.",
     "沈嘉玲（2020）。SES 架構中譯整理（課程講義引用）。",
-    "Cinner, J. E., & Barnes, M. L. (2019). Social dimensions of resilience in social-ecological systems. <i>One Earth, 1</i>(1), 51–56.",
-    "IPSI（2026）。Satoyama Initiative Case Studies 資料庫。satoyamainitiative.org/case_study（2026 年 10 月查詢）"
+    "Cinner, J. E., & Barnes, M. L. (2019). Social dimensions of resilience in social-ecological systems. <i>One Earth, 1</i>(1), 51–56."
   ]],
   ["案例資料",[
     "人禾環境倫理發展基金會：〈貢寮水梯田棲地保育合作暨產業推動〉107 年成果；113 年工作成果報告（國土生態綠網保育計畫、田寮洋生態調查委託案）",
@@ -878,7 +911,8 @@ const REFS=[
     "今周刊（2026）。〈高手在田間！老農穿「西裝褲」插秧…貢寮水梯田掀永續革命〉。",
     "貢寮．水．梯田部落格〈和禾生產班〉；和禾聚落官網〈團體預約／綠色旅遊〉；WaBay 挖貝〈貢寮水梯田里山農創基地〉"
   ]],
-  ["圖資與素材",[
+  ["資料庫與圖資",[
+    "IPSI（2026）。Satoyama Initiative Case Studies 資料庫。satoyamainitiative.org/case_study（2026 年 10 月查詢）",
     "衛星影像：Esri World Imagery（Esri, Maxar, Earthstar Geographics）",
     "地圖引擎：MapLibre GL JS",
     "物件與水梯田插圖：小組成員蒐集提供",
@@ -937,11 +971,11 @@ const TOURS={
 // 「從 SES 看到的事」頁
 const SESFIND={
   title:"從 SES 看到的三件事",
-  sub:"把事物分進框架之後，才看得出它們怎麼互相牽動",
+  sub:"SES 是診斷工具：看出哪些條件撐得住、哪些正在鬆動（Ostrom 2007、2009）",
   cards:[
-    ["A → RS → O・ER3","濕地是農民種出來的",["終年蓄水、不用農藥、人工修田埂，這些老農的做法讓水梯田接近濕地，也能涵養地下水；棄耕的田則會逐漸陸化。","人的耕作本身就是維持濕地的「中度干擾」；在地知識不是落後，而是韌性來源。"]],
-    ["A ← S2","最薄的一層是行動者",["田區小又陡，幾乎都靠人力；務農者在高齡化，修田埂的手藝也跟著老農流失。","一塊田棄耕，鄰田就得扛更多水路維護，容易連鎖棄耕。"]],
-    ["GS ← S4","治理靠外部支撐",["2011 年林務局試行生態勞務給付，之後轉向消費者買米支持的「私人生態系服務給付」。","補助會中斷；生產班自訂的作業規範與消費者的直接支持，才是在地撐得住的部分。"]]
+    ["A → RS → O・ER3","濕地是農民種出來的",["終年蓄水、不用農藥、人工修田埂，這些老農的做法讓水梯田接近濕地，也能涵養地下水；棄耕的田則會逐漸陸化。","人的耕作本身就是維持濕地的「中度干擾」；在地知識不是落後，而是韌性來源。"],"關鍵變數 A7 對系統的知識：有利，但正隨老農流失"],
+    ["A ← S2","最薄的一層是行動者",["田區小又陡，幾乎都靠人力；務農者在高齡化，修田埂的手藝也跟著老農流失。","一塊田棄耕，鄰田就得扛更多水路維護，容易連鎖棄耕。"],"關鍵變數 A1 人數少、A8 對資源依賴低：保價收購正是在提高依賴度"],
+    ["GS ← S4","治理靠外部支撐",["2011 年林務局試行生態勞務給付，之後轉向消費者買米支持的「私人生態系服務給付」。","補助會中斷；生產班自訂的作業規範與消費者的直接支持，才是在地撐得住的部分。"],"關鍵變數 GS6 集體選擇規則：生產班自訂原則，2013 年有農友因不願遵守而退出"]
   ],
   src:"出處：豐年雜誌〈「田含水親像喝一口水含佇喉嚨」人禾基金會的貢寮水梯田十年經驗〉（2022）",
   band:["「缺一不可」不是一張清單，而是一條迴圈","農民耕作 → 濕地生物回來 → 生態給付與消費者買單 → 農民不吃虧、繼續耕作。任何一環斷了，整個系統就停下來。"]
@@ -1155,7 +1189,7 @@ function receiveScan(id,by,keep,noVote){
 window.receiveScan=receiveScan;
 /* ====== 全班投票 ====== */
 let voting=null;
-const VOTE_SEC=10;
+const VOTE_SEC=7;
 function runVote(q,done){
   const it=ITEMS[q.id], vid=Date.now().toString(36)+Math.random().toString(36).slice(2,5);
   const vobj={vid,id:q.id,name:it.name,by:q.by||"",dur:VOTE_SEC,note:it.ansNote||""};
@@ -1276,12 +1310,12 @@ function chip2(p,cx,cy,t,sub,o){const h=o.h,w=o.w;
     el("path",{d:`M${sx} ${sy} C${sx+90} ${sy} ${CX-CW/2-110} ${cy} ${CX-CW/2-10} ${cy}`,class:"dflow gold","marker-end":"url(#arG)"},gL);
     boxes[at]={y,h}; y+=h+6;
   }
-  group(4,"成果",OUTCOMES,"#5E8C3A");
+  group(5,"成果",OUTCOMES,"#5E8C3A");
   group(6,"產出",PRODUCTS,"#C9962E");
   group(7,"推廣",PROMOTION,"#B5452F",null,PROMO_NOTE);
   group(8,"綠色旅遊（推廣＋收入）",TOURISM,"#3F7F8A",12.5);
   // 5 與土地上的事物形成循環
-  const gl5=dg(5,DL), gn5=dg(5,DN), RR=200;
+  const gl5=dg(4,DL), gn5=dg(4,DN), RR=200;
   el("circle",{cx:F[0],cy:F[1],r:RR,class:"cyc"},gl5);
   const ANG=[-90,-140,140,90,52];   // 避開左邊（中介者箭頭）與右邊（成果箭頭）
   OKS.forEach((k,i)=>{const a=(ANG[i]!=null?ANG[i]:i*72)*Math.PI/180, x=F[0]+RR*Math.cos(a), yy=F[1]+RR*Math.sin(a);
@@ -1297,14 +1331,14 @@ function chip2(p,cx,cy,t,sub,o){const h=o.h,w=o.w;
   el("rect",{x:PX-105,y:PY-30,width:210,height:60,rx:30,fill:"#FBEDEA",stroke:"#B5452F","stroke-width":3},gp);
   drawArt("people",el("g",{transform:`translate(${PX-68} ${PY+2}) scale(.42)`},gp));
   txt(gp,PX+16,PY-3,"民眾",24,{"font-weight":700,fill:"#B5452F"});
-  txt(gp,PX+16,PY+20,"看見・走進田裡",14,{fill:"#4A5755"});
+  txt(gp,PX+16,PY+20,"看見・參與議題",14,{fill:"#4A5755"});
   el("path",{d:`M${CX-CW/2-4} ${b7.y+b7.h-24} C1060 ${b7.y+b7.h+60} 1000 ${PY-6} ${PX+108} ${PY-6}`,class:"dflow red","marker-end":"url(#arR)"},dg(7,DL));
   el("path",{d:`M${CX-CW/2-4} ${b8.y+b8.h-26} C1080 ${b8.y+b8.h} 1020 ${PY+10} ${PX+108} ${PY+10}`,class:"dflow red","marker-end":"url(#arR)"},dg(8,DL));
   const g9l=dg(9,DL), g9n=dg(9,DN);
   el("path",{d:`M${PX-108} ${PY+4} C560 892 ${RX} 880 ${RX} ${RY0+(RESOURCES.length-1)*RS+40}`,class:"dflow",style:"stroke:#5E8C3A","marker-end":"url(#arD)"},g9l);
   el("path",{d:`M${PX+6} ${PY-32} C${PX+6} 700 840 640 856 ${F[1]+FR-6}`,class:"dflow",style:"stroke:#5E8C3A","marker-end":"url(#arD)"},g9l);
   chip(g9n,470,872,"集資・捐款",{fs:17,h:32,fill:"#EEF4E6",stroke:"#5E8C3A",color:"#3E6B26"});
-  chip(g9n,760,778,"預購・走進田裡",{fs:17,h:32,fill:"#EEF4E6",stroke:"#5E8C3A",color:"#3E6B26"});
+  chip(g9n,760,778,"預購・參與議題",{fs:17,h:32,fill:"#EEF4E6",stroke:"#5E8C3A",color:"#3E6B26"});
   {const bp=boxes[6];
    el("path",{d:`M${PX+92} ${PY-26} C1080 760 1110 ${bp.y+bp.h-10} ${CX-CW/2-8} ${bp.y+bp.h-30}`,class:"dflow",style:"stroke:#5E8C3A","marker-end":"url(#arD)"},g9l);
    chip(g9n,1000,780,"購買和禾米・加工品",{fs:17,h:32,fill:"#EEF4E6",stroke:"#5E8C3A",color:"#3E6B26"});}
@@ -1381,7 +1415,9 @@ function rCommit(){
   rCloseCard();
   if(!isNew)return;
   rDone.add(k);
-  setTimeout(()=>{renderRes();const g=rEls[k].g;g.classList.remove("land");void g.getBBox();g.classList.add("land");
+  setTimeout(()=>{renderRes();{const ch=$("rchip-"+k);ch.classList.remove("pop");void ch.offsetWidth;ch.classList.add("pop");
+      const box=ch.closest(".rnotes");if(box&&box.scrollHeight>box.clientHeight){box.scrollTop=ch.offsetTop-box.clientHeight/2}}
+    const g=rEls[k].g;g.classList.remove("land");void g.getBBox();g.classList.add("land");
     const r=rEls[k].ring;r.classList.remove("go");void r.getBBox();r.classList.add("go");
     if(rDone.size===RTOTAL)setTimeout(()=>{setCap("全部分類完成！謝謝你一起把資源找回來",true)},900);},300);
 }
@@ -1481,7 +1517,7 @@ function ecard(p,x,y,w,h,color,title,lines,fs){
   el("path",{d:land+" L1000 660 L80 660 Z",fill:"#E6E2D2"},g);
   el("path",{d:land,fill:"none",stroke:"#4A5755","stroke-width":5,"stroke-linecap":"round"},g);
   txt(g,340,585,"水梯田",28,{"font-weight":700,fill:"#3F7F8A"}); txt(g,340,620,"有人耕作的狀態",18,{fill:"#4A5755"});
-  txt(g,800,615,"灌叢・次生林",28,{"font-weight":700,fill:"#4F7A4A"}); txt(g,800,648,"廢耕後的狀態",18,{fill:"#4A5755"});
+  txt(g,800,615,"灌叢・次生林",28,{"font-weight":700,fill:"#4F7A4A"}); txt(g,800,648,"濕地物種與蓄水功能消失",18,{fill:"#B5452F"});
   el("path",{d:"M560 356 V250",stroke:"#B5452F","stroke-width":3,"stroke-dasharray":"6 6"},g);
   txt(g,560,236,"門檻",26,{fill:"#B5452F","font-weight":700});
   const ball=el("circle",{cx:340,cy:494,r:26,fill:"#C9962E",stroke:"#8A6440","stroke-width":3},g);
@@ -1620,9 +1656,10 @@ TOURS.list.forEach((t,i)=>{const d=document.createElement("div");d.className="sp
 {const d=document.createElement("div");d.className="spc sum";d.style.transitionDelay=(TOURS.list.length*0.35+0.4)+"s";
   d.innerHTML="<h3></h3><p></p>";d.querySelector("h3").textContent=TOURS.sum[0];d.querySelector("p").textContent=TOURS.sum[1];$("toGrid").appendChild(d);}
 $("sfTitle").textContent=SESFIND.title; $("sfSub").textContent=SESFIND.sub;
-SESFIND.cards.forEach(([k,h,ps],i)=>{const c=document.createElement("div");c.className="stc st"+(i+1);
+SESFIND.cards.forEach(([k,h,ps,kv],i)=>{const c=document.createElement("div");c.className="stc st"+(i+1);
   c.innerHTML='<p class="sfk"></p><h3></h3>';c.querySelector(".sfk").textContent=k;c.querySelector("h3").textContent=h;
   ps.forEach(p=>{const d=document.createElement("p");d.className="str";d.textContent=p;c.appendChild(d)});
+  if(kv){const d=document.createElement("p");d.className="sfv";d.textContent=kv;c.appendChild(d)}
   if(i===2){const s=document.createElement("p");s.className="stsrc";s.textContent=SESFIND.src;c.appendChild(s)}
   $("sfCards").appendChild(c)});
 $("sfBandT").textContent=SESFIND.band[0]; $("sfBandS").textContent=SESFIND.band[1];
@@ -1703,10 +1740,11 @@ const STEPS=[
     later(()=>{$("bigqText").innerHTML=TEXT.awake;$("bigq").classList.add("on")},1400);
     later(()=>B.classList.add("dryGone"),3600);}},
   {id:"join",l:"scene",enter(){B.classList.add("dryGone");setLandscape(false);openCard("join")}},
-  {id:"hunt",l:"scene",enter(){setLandscape(false);renderHud();if(popQ.length&&!popping)nextPop()}},
+  {id:"hunt",l:"scene",enter(){setLandscape(false);renderHud();huntTimer(false);if(popQ.length&&!popping)nextPop()}},
   {id:"reveal",l:"scene",enter(){
     OKS.forEach(k=>found.add(k)); renderHud(); setLandscape(true,true);
-    later(()=>setCap(TEXT.revealCap,true),7000);}},
+    later(()=>setCap(TEXT.revealCap,true),7000);
+    later(()=>setCap(TEXT.revealCap2,true),13000);}},
   {id:"resist",l:"resist",enter(){revealIn($("rsvg"),700)}},
   ...[1,2,2.5,3,4,5,6,7,8,9].map(d=>({id:"d"+d,l:"diagram",enter(){setLandscape(true,false);setDiagram(d)}})),
   {id:"ses",l:"sesmap",enter:()=>revealSes()},
@@ -1723,6 +1761,21 @@ const MINI=PLAY?IDX("explore"):0, MAXI=PLAY?IDX("explore"):IDX("refs");
 let cur=0, skipArm=0;
 function openCard(id){$(id).classList.add("on");$("scrim").classList.add("on")}
 function closeCards(){["join"].forEach(id=>$(id).classList.remove("on"));if(!popping)$("scrim").classList.remove("on")}
+/* ====== 尋寶倒數（只算「找」的時間：投票與說明卡出現時暫停；只提醒，不強制換頁） ====== */
+const HUNT_SEC=180; let huntLeft=null, huntLast=0, huntTick=null;
+function huntTimer(reset){
+  if(reset||huntLeft===null)huntLeft=HUNT_SEC*1000;
+  clearInterval(huntTick); huntLast=Date.now();
+  const paint=()=>{const now=Date.now(), paused=!!(popping||voting);
+    if(!paused&&huntLeft>0)huntLeft=Math.max(0,huntLeft-(now-huntLast)); huntLast=now;
+    const left=Math.ceil(huntLeft/1000), T=$("hTimer");
+    $("hTimerT").textContent=left>0?(paused?"⏸ ":"")+Math.floor(left/60)+":"+String(left%60).padStart(2,"0"):"時間到，準備換頁";
+    T.classList.toggle("paused",paused&&left>0);
+    T.classList.toggle("warn",left>0&&left<=30); T.classList.toggle("done",left===0);
+    if(left===0||STEPS[cur].id!=="hunt")clearInterval(huntTick);};
+  paint(); huntTick=setInterval(paint,250);
+}
+$("hTimer").addEventListener("click",e=>{e.stopPropagation();huntTimer(true)});
 function go(i){
   i=Math.max(MINI,Math.min(MAXI,i));
   if(rStage!=="closed")rCloseCard();

@@ -380,6 +380,20 @@ body[data-s="sesfind"] .stband{opacity:1}
 #playBigQr img,#playBigQr canvas{width:clamp(240px,30vw,440px)!important;height:auto!important;display:block}
 .pqk{margin:0;font-size:clamp(22px,2.2vw,36px);letter-spacing:.14em;color:var(--seal);font-weight:700}
 #playqr h2{margin:.2em 0 .4em;font-size:clamp(36px,4.4vw,76px);line-height:1.15;letter-spacing:.04em}
+#playqr .pqwrap{bottom:clamp(170px,26vh,250px)}
+#playqr .qrbox img,#playqr .qrbox canvas{width:clamp(180px,24vh,300px)!important}
+#playqr .pqfoot{position:absolute;left:clamp(24px,7vw,140px);right:clamp(24px,7vw,140px);bottom:clamp(18px,4vh,48px);
+  display:flex;gap:clamp(14px,2vw,32px);align-items:center;padding-top:clamp(10px,1.6vh,18px);border-top:2px solid var(--ink-soft)}
+#playqr .pqphotos{display:flex;gap:10px;flex:none}
+body[data-l="playqr"] #playqr .pqph{pointer-events:auto}
+#playqr .pqph{padding:0;border:2px solid var(--ink);border-radius:3px;background:#fff;cursor:zoom-in;line-height:0}
+#playqr .pqph img{height:clamp(110px,17vh,170px);width:auto;display:block}
+#playqr .pqtext p{margin:0 0 .45em;font-size:clamp(14px,1.15vw,19px);line-height:1.6;color:var(--ink-soft)}
+#playqr .pqtext b{margin-right:.8em;color:var(--ink)}
+.pqzoom{pointer-events:auto;position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(20,28,27,.82);cursor:zoom-out}
+.pqzoom[hidden]{display:none}
+.pqzoom img{max-width:92vw;max-height:92vh;border:3px solid #fff;border-radius:3px}
+@media (max-width:760px){#playqr .pqfoot{flex-direction:column;align-items:stretch}#playqr .pqwrap{bottom:auto}}
 #playqr .hint{font-size:clamp(19px,1.8vw,30px)}
 body.play .nav{display:none}
 @media (max-width:760px){.pqwrap{grid-template-columns:1fr;justify-items:center;text-align:center}}
@@ -678,6 +692,17 @@ body[data-l="globe"] #globe{pointer-events:auto}
       <p class="joinurl" id="playUrl"></p>
     </div>
   </div>
+  <div class="pqfoot">
+    <div class="pqphotos">
+      <button class="pqph" data-src="img/whiteboard.webp" aria-label="放大：小組白板討論"><img src="img/whiteboard.webp" alt="小組白板討論：場域、做的事、成效、利害關係人、問題"></button>
+      <button class="pqph" data-src="img/notes.webp" aria-label="放大：遊戲構想筆記"><img src="img/notes.webp" alt="遊戲構想筆記：什麼缺一不可、梯田草圖"></button>
+    </div>
+    <div class="pqtext">
+      <p><b>小組討論過程</b>白板上先拆出場域時間軸、做的事、成效、利害關係人與問題；筆記上定下核心問題「對地方來說，什麼缺一不可？」與桌遊＋手機遊戲的形式，想呈現一個鄉村是複雜的、變動的，不是單一事物。（點照片可放大）</p>
+      <p><b>AI 使用方式</b>使用 Claude（Anthropic）協助進行簡報動態內容設計、小遊戲程式碼製作、圖例統整繪製，以便清楚表達概念。</p>
+    </div>
+  </div>
+  <div class="pqzoom" id="pqZoom" hidden><img alt=""></div>
 </section>
 
 <!-- 資源盤點 -->
@@ -1441,7 +1466,9 @@ function sarrow(p,d,feedback){el("path",{d,fill:"none",stroke:feedback?"#B5452F"
 (function buildSesMap(){
   let g=sg(1);
   sbox(g,60,140,1480,84,"S","社經與政治背景",SESC.S);
-  namesOf("S").forEach((s,i)=>chip(g,700+i*270,182,s,{w:250,fs:21,h:42,fill:"#FFFFFF",stroke:SESC.S,color:SESC.S}));
+  {const list=namesOf("S").map(s=>[s+" S5",0]).concat([["國土綠網・生態給付方案 S4",1],["米價低・食米減少 S5",1],["媒體曝光 S6",1]]);
+   const fs=14, ws=list.map(([s])=>s.length*fs*.93+20), gap=6; let x=318;
+   list.forEach(([s,extra],i)=>{chip(g,x+ws[i]/2,182,s,{w:ws[i],fs,h:36,fill:extra?"#F6EFE6":"#FFFFFF",stroke:SESC.S,color:SESC.S});x+=ws[i]+gap;});}
   sbox(g,60,806,1480,80,"ECO","相關生態系",SESC.ECO);
   namesOf("ECO").forEach((s,i)=>chip(g,440+i*220,846,s,{w:200,fs:20,h:42,fill:"#FFFFFF",stroke:SESC.ECO,color:SESC.ECO}));
   el("rect",{x:1110,y:818,width:290,height:56,rx:4,fill:"#FBEDEA",stroke:"#B5452F","stroke-width":2,"stroke-dasharray":"7 5"},g);
@@ -1751,13 +1778,13 @@ const STEPS=[
   {id:"sesfind",l:"sesfind"},
   {id:"stance",l:"stance"},
   {id:"reflect",l:"reflect"},
-  {id:"playqr",l:"playqr"},
   {id:"refs",l:"refs"},
+  {id:"playqr",l:"playqr"},
   {id:"explore",l:"scene",enter(){setLandscape(true,false);renderRes()}}
 ];
 const PLAY=!!window.PLAY_PAGE||new URL(location.href).searchParams.has("play");
 const IDX=id=>STEPS.findIndex(s=>s.id===id);
-const MINI=PLAY?IDX("explore"):0, MAXI=PLAY?IDX("explore"):IDX("refs");
+const MINI=PLAY?IDX("explore"):0, MAXI=PLAY?IDX("explore"):IDX("playqr");
 let cur=0, skipArm=0;
 function openCard(id){$(id).classList.add("on");$("scrim").classList.add("on")}
 function closeCards(){["join"].forEach(id=>$(id).classList.remove("on"));if(!popping)$("scrim").classList.remove("on")}
@@ -1777,6 +1804,7 @@ function huntTimer(reset){
 }
 $("hTimer").addEventListener("click",e=>{e.stopPropagation();huntTimer(true)});
 function go(i){
+  {const z=$("pqZoom");if(z)z.hidden=true}
   i=Math.max(MINI,Math.min(MAXI,i));
   if(rStage!=="closed")rCloseCard();
   clearTimers(); clearCap(); closeCards(); $("dock").classList.remove("on");
@@ -1854,6 +1882,8 @@ function makeQr(elId,size,text){const box=$(elId);box.innerHTML="";
   else box.textContent="（QR Code 載入失敗）";}
 
 /* ====== 開始 ====== */
+document.querySelectorAll(".pqph").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();const z=$("pqZoom");z.querySelector("img").src=b.dataset.src;z.hidden=false}));
+$("pqZoom").addEventListener("click",e=>{e.stopPropagation();$("pqZoom").hidden=true});
 $("tKicker").textContent=TEXT.kicker; $("tMain").textContent=TEXT.title; $("tStamp").textContent=TEXT.stamp; $("tSub").textContent=TEXT.titleSub;
 $("hTitle").textContent=TEXT.huntTitle; $("hSub").textContent=TEXT.huntSub;
 $("roomCode").textContent=ROOM; $("roomMini").textContent=ROOM; $("joinUrl").textContent=JOIN_URL;

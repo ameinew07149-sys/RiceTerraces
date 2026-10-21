@@ -223,6 +223,19 @@ body[data-s="hunt"] .hud{opacity:1}
 
 /* ===== 中介者圖解 ===== */
 #diagram .veil{position:absolute;inset:0;opacity:1}
+/* 中介圖的照片欄 */
+.dphotos{position:absolute;z-index:3;top:clamp(110px,15vh,140px);bottom:clamp(20px,4vh,40px);width:min(27vw,470px);padding:12px 14px;
+  background:rgba(244,243,237,.96);border:2px solid var(--ink);border-radius:4px;box-shadow:3px 4px 0 rgba(30,43,42,.18);
+  display:flex;flex-direction:column;opacity:0;transform:translateY(10px);transition:opacity .7s,transform .7s;pointer-events:none}
+.dphotos.on{opacity:1;transform:none}
+.dphotos.left{left:clamp(10px,1.2vw,20px)} .dphotos.right{right:clamp(10px,1.2vw,20px)}
+.dphotos h3{margin:0 0 8px;font-size:clamp(16px,1.3vw,22px)}
+.dpgrid{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:8px}
+.dpgrid figure{margin:0;min-height:0;display:flex;flex-direction:column;background:#fff;border:1px solid #C9CCC4}
+.dpgrid img{flex:1;min-height:0;width:100%;object-fit:cover;display:block}
+.dpgrid figcaption{padding:4px 6px;font-size:clamp(11px,.85vw,14.5px);line-height:1.35;color:var(--ink)}
+.dpgrid figure.wide{grid-column:span 2}
+.dpsrc{margin:6px 0 0;font-size:clamp(10px,.75vw,12px);color:var(--ink-soft);line-height:1.4}
 /* 全頁圖解時，把底下的水梯田場景藏起來並暫停動畫，避免播放卡頓 */
 body:is([data-l="title"],[data-l="globe"],[data-l="diagram"],[data-l="resist"],[data-l="divers"],[data-l="partners"],[data-l="cycle"],[data-l="sesmap"],[data-l="sesfind"],[data-l="stance"],[data-l="reflect"],[data-l="playqr"],[data-l="refs"]) #scene{visibility:hidden;transition:visibility 0s 1.3s}
 body:is([data-l="title"],[data-l="globe"],[data-l="diagram"],[data-l="resist"],[data-l="divers"],[data-l="partners"],[data-l="cycle"],[data-l="sesmap"],[data-l="sesfind"],[data-l="stance"],[data-l="reflect"],[data-l="playqr"],[data-l="refs"]) #scene *{animation-play-state:paused}
@@ -404,7 +417,7 @@ body.play .nav{display:none}
 .refs .rcol{padding:clamp(12px,1.4vw,22px)}
 .refs .rcol h3{font-size:clamp(18px,1.6vw,26px);margin-bottom:.5em}
 .refs ul{margin:0;padding:0;list-style:none}
-.refs .rcol li{padding:.32em 0 .32em .9em;text-indent:-.9em;border-bottom:1px dashed var(--ink-soft);font-size:clamp(12.5px,1vw,16.5px);line-height:1.45}
+.refs .rcol li{padding:.32em 0 .32em .9em;text-indent:-.9em;border-bottom:1px dashed var(--ink-soft);font-size:clamp(11.5px,.88vw,14.5px);line-height:1.4}
 .refs li::before{content:"・"}
 .refs li i{font-style:italic}
 .refs .rcol:nth-child(2){border-top-color:var(--water)}
@@ -418,10 +431,12 @@ body.play .nav{display:none}
 .rcol ol{margin:0;padding-left:1.4em}
 .rcol li{padding:.45em 0;border-bottom:1.5px dashed var(--ink-soft);font-size:clamp(19px,1.7vw,28px);line-height:1.55}
 .rcol li.todo{color:var(--ink-soft)}
-#qList{padding-left:0;list-style:none}
-#qList li{padding:.7em 0 .9em}
-#qList li b{display:block;margin-bottom:.2em;font-size:1.15em;color:var(--seal)}
-#qList li span{display:block;font-size:clamp(21px,1.9vw,32px);line-height:1.55}
+#qList,#critList{padding-left:0;list-style:none}
+#qList li,#critList li{padding:.7em 0 .9em}
+#qList li span,#critList li span{font-size:clamp(16px,1.45vw,24px)!important;line-height:1.6!important}
+#qList li,#critList li{padding:.5em 0 .7em}
+#critList li b,#qList li b{display:block;margin-bottom:.2em;font-size:1.15em;color:var(--seal)}
+#critList li span,#qList li span{display:block;font-size:clamp(21px,1.9vw,32px);line-height:1.55}
 #qList li small{display:block;margin-top:.45em;font-size:clamp(14px,1.1vw,18px);color:var(--ink-soft)}
 
 @media (max-width:760px){
@@ -525,6 +540,7 @@ body[data-l="globe"] #globe{pointer-events:auto}
   #playqr .pqtext p{font-size:14.5px}
 }
 
+@media (max-width:760px){.dphotos{position:fixed;left:10px!important;right:10px!important;width:auto;top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 96px);height:34vh}}
 /* ===== 手機直立：圖表頁可左右滑動，標題縮小 ===== */
 @media (max-width:760px) and (orientation:portrait){
   #titleSlide h1{font-size:15vw;white-space:nowrap}
@@ -622,6 +638,7 @@ body[data-l="globe"] #globe{pointer-events:auto}
 <section class="layer" id="diagram">
   <div class="veil paper"></div>
   <div class="head"><h2 id="dTitle"></h2><p id="dSub"></p></div>
+  <aside class="dphotos" id="dPhotos" aria-label="相關照片"><h3 id="dpTitle"></h3><div class="dpgrid" id="dpGrid"></div><p class="dpsrc" id="dpSrc"></p></aside>
   <svg id="dsvg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
     <defs>
       <marker id="arW" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E97A0"/></marker>
@@ -907,6 +924,26 @@ const PROMOTION=[["紀錄片《和禾歲記》","李偉傑、范欽慧・附生�
 const PROMO_NOTE="延伸：作者參加活動後創作繪本《小班做飯糰》";
 const TOURISM=[["團體遊程","漫步水梯田・秋冬農事・踏草尋牛・蜂禾日麗・飯糰手作"],["田邊聊寮與活動","生產班據點與解說站・手插秧大賽・四季小旅行"]];
 const LOOP_LABEL="被更多人看見，帶回更多支持與資源";
+// 中介圖照片：哪一步、放左或右、照片與說明
+const DPHOTOS={
+  2.5:{side:"right",title:"平行夥伴在現場",items:[
+    ["team","和禾聚落團隊：吉林分校改建的社區據點（2021 起承租）","wide"],
+    ["classroom","修復後的溪石牆教室，作為環境教育空間"],
+    ["harvest","青年割友會：農忙時下田手割稻（2011 起）"],
+    ["shop","聚落裡的在地選物，銷售貢寮產品","wide"]],
+    src:"照片與資料：微笑台灣〈和禾聚落〉（2024）、PeoPo〈割友會〉（2011）"},
+  6:{side:"left",title:"從田裡長出來的東西",items:[
+    ["rice","和禾米：依保育等級分級保價收購","wide"],
+    ["cookie","和禾餅：白花紫蘇的香氣"],
+    ["honey","樹伯家的森林蜜：花季不同，風味不同"],
+    ["gift","和禾米禮盒與蜂蜜","wide"]],
+    src:"照片與資料：環境資訊中心（2017）、微笑台灣（2024）、和禾聚落"},
+  7:{side:"left",title:"讓更多人看見",items:[
+    ["film","《和禾歲記》紀錄片，附生態系服務教材包","wide"],
+    ["book","《水梯田！貢寮山村的故事》"],
+    ["zine","《摃仔聊》：和禾聚落的在地刊物"]],
+    src:"照片與資料：貢寮．水．梯田、微笑台灣〈和禾聚落〉（2024）"}
+};
 const DHEAD=[
   null,
   ["中介者：人禾環境倫理發展基金會","連結許多外部資源，打造以社區為中心的模式"],
@@ -976,6 +1013,9 @@ const REFS=[
     "Irene Lee（2016）。〈《碧路・藍旅》02. 太平洋沿岸的不老風景－貢寮、卯澳〉。關鍵評論網。",
     "中衛發展中心（2020）。〈貢寮街有機書店：老屋翻修意外帶動老街創生〉。關鍵評論網。",
     "微笑台灣（2019）。〈與貢寮水梯田一起深呼吸，每個體驗活動都是季節限定〉。",
+    "微笑台灣（2024）。〈新北貢寮閒置校舍轉型社區中心，「和禾聚落」守護傳統水梯田手耕技藝〉。",
+    "廖靜蕙（2017）。〈貢寮水梯田會咁水 涵養糧食生物呷飽飽〉。環境資訊中心。",
+    "人禾環境倫理發展基金會（2011）。〈割友會貢寮山谷巡迴演出 水梯田收穫季圓滿落幕〉。PeoPo 公民新聞。",
     "今周刊（2026）。〈高手在田間！老農穿「西裝褲」插秧…貢寮水梯田掀永續革命〉。",
     "貢寮．水．梯田部落格〈和禾生產班〉；和禾聚落官網〈團體預約／綠色旅遊〉；WaBay 挖貝〈貢寮水梯田里山農創基地〉"
   ]],
@@ -984,18 +1024,19 @@ const REFS=[
     "衛星影像：Esri World Imagery（Esri, Maxar, Earthstar Geographics）",
     "地圖引擎：MapLibre GL JS",
     "物件與水梯田插圖：小組成員蒐集提供",
+    "中介圖照片：微笑台灣、環境資訊中心、PeoPo、貢寮．水．梯田、和禾聚落",
     "其餘示意圖：小組自繪",
     "地球頁亮點：依 IPSI 案例資料庫各國案例數繪製"
   ]]
 ];
 const REFLECT_TEXT=["建設性評論與現場提問","從案例分析出發，帶著問題走進現場"];
 const CRITIQUE=[
-  "中介者的冗餘：外部資源多半經由人禾這一個節點進入，一旦計畫結束或人力不足，整個資源網路會一起受影響。",
-  "觀光的兩面：綠色旅遊能把收入帶回地方，但在地也擔心「當農業的支撐力量只剩下觀光，是件很危險的事」，遊客數該停在哪裡，需要在地自己決定。"
+  ["中介者太過核心","目前所見外部資源多經由人禾這個節點進入系統中，一旦相關的計畫結束或人力不足，整個資源會一起受到影響，無法維持現在的循環。"],
+  ["讓焦點回到田間","綠色旅遊觀光開發可以讓收入留在地方，卻也是雙面刃：「當農業的支撐力量只剩下觀光，是件很危險的事」。因此就目前來看，在地選擇以開發農業相關產品為主，未將核心放在觀光上，並呼籲民眾以購買產品或其他方式支持，同時透過單一窗口與總量管制降低環境影響。"]
 ];
 const QUESTIONS=[
-  ["青年的角色","修田埂、管水路的老手藝，現在有年輕人在學嗎？除了下田，年輕人還能用什麼角色留在這裡？","呼應：最薄的一層是行動者・生產班已分「默默耕耘組」與「拋頭露面組」"],
-  ["人禾放手之後","如果人禾放手，這片水梯田還能自主運作下去嗎？哪些事會先停下來？","呼應：中介者的冗餘・治理靠外部"]
+  ["青年的角色","目前有看到青年割友會的協力，但看資料應該不是常態。因為水梯田這邊最薄弱的部分是行動者不足，如果有青年進駐的話，除了下田之外，是否有其他行動可以協助在地？","呼應：系統中最薄弱的一層是行動者，該如何補強這一塊"],
+  ["人禾放手後","要是未來因為某些緣故，基金會放手之後，這塊水梯田還能自主運作下去嗎？或是除了生產班外，有準備接手的團隊分工嗎？","呼應：中介者太過核心，目前治理多仰賴外部資源"]
 ];
 // 「這片水梯田的居民」頁
 const SPECIES={
@@ -1050,8 +1091,8 @@ const SESFIND={
 };
 // 「我們的觀點」頁：報導引文與我們的解讀
 const STANCE={
-  title:"我們的觀點：不是擴大，而是守住",
-  sub:"SES 的診斷是人少、治理靠外部；所以重點是守住這條迴圈，而不是擴大規模",
+  title:"我們的觀點：沒有一味擴大，而是選擇守成",
+  sub:"SES 的診斷是人少、治理靠外部；所以重點是守成這條迴圈，而不是一味擴大規模",
   quotes:[["當農業的支撐力量只剩下觀光，是件很危險的事",""],["總常說不要向天要太多","農民"],["不過度打擾也是對貢寮復育的一種支持",""]],
   quoteSrc:"出處：陳筱婷（2015），環境資訊中心〈《和禾歲記》水梯田復耕 重牽貢寮人與土地的連結〉",
   read:["主流的「綠色成長」相信產量和市場能一起變大；水梯田產量低、做不到規模經濟，卻靠保價收購與和夥人撐住生計。","在地期待的支持是購買產品，不是變成觀光場；生產班也設單一窗口、管制遊客承載量，本來就在限制成長。"],
@@ -1415,6 +1456,14 @@ DHEAD[2.5]=["串起平行夥伴","不只向上媒合資源，也橫向連結在�
 function setDiagram(d){
   document.querySelectorAll(".dg").forEach(g=>g.classList.toggle("on",g.dataset.only?+g.dataset.at===d:+g.dataset.at<=d));
   const h=DHEAD[d]||["",""]; $("dTitle").textContent=h[0]; $("dSub").textContent=h[1];
+  const P=DPHOTOS[d], box=$("dPhotos");
+  if(!P){box.classList.remove("on");return}
+  box.className="dphotos "+P.side; $("dpTitle").textContent=P.title; $("dpSrc").textContent=P.src;
+  const G=$("dpGrid"); G.innerHTML="";
+  P.items.forEach(([f,cap,cls])=>{const fg=document.createElement("figure");if(cls)fg.className=cls;
+    const im=document.createElement("img");im.src="img/photos/"+f+".webp";im.alt=cap;im.loading="eager";
+    const fc=document.createElement("figcaption");fc.textContent=cap;fg.append(im,fc);G.appendChild(fg)});
+  requestAnimationFrame(()=>requestAnimationFrame(()=>box.classList.add("on")));
 }
 
 /* ====== 資源盤點 ====== */
@@ -1531,7 +1580,7 @@ function sarrow(p,d,feedback){el("path",{d,fill:"none",stroke:feedback?"#B5452F"
   sarrow(g,"M1340 488 L1340 520"); txt(g,1380,510,"規範",17,{fill:"#4A5755"});
   g=sg(4);
   el("rect",{x:500,y:250,width:600,height:510,rx:18,fill:"rgba(255,255,255,.35)",stroke:"#4A5755","stroke-width":2.5,"stroke-dasharray":"8 7"},g);
-  txt(g,800,280,"焦點行動情境",19,{fill:"#4A5755"});
+  txt(g,800,280,"AS 焦點行動情境（Action Situation）：在規則下互動 → 產生結果",17,{fill:"#4A5755","font-weight":700});
   sbox(g,530,296,540,186,"I","互動",SESC.I); sgrid(g,namesOf("I"),530,372,540,2,SESC.I);
   g=sg(5);
   sarrow(g,"M800 484 L800 536");

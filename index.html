@@ -497,6 +497,48 @@ body[data-l="globe"] #globe{pointer-events:auto}
 @media (prefers-reduced-motion: reduce){
   *{animation:none!important;transition-duration:.01s!important;transition-delay:0s!important}
 }
+
+/* ===== 手機：文字頁改成可上下捲動的單欄排版 ===== */
+@media (max-width:760px){
+  body[data-l="stance"] #stance,body[data-l="sesfind"] #sesfind,body[data-l="reflect"] #reflect,
+  body[data-l="refs"] #refs,body[data-l="playqr"] #playqr{pointer-events:auto}
+  #stance,#sesfind,#reflect,#refs,#playqr{overflow-y:auto;-webkit-overflow-scrolling:touch;
+    padding:calc(env(safe-area-inset-top,0px) + 16px) 14px calc(env(safe-area-inset-bottom,0px) + 96px)}
+  :is(#stance,#sesfind,#reflect,#refs,#playqr) .head{position:static}
+  :is(#stance,#sesfind,#reflect,#refs,#playqr) .head h2{font-size:26px}
+  :is(#stance,#sesfind,#reflect,#refs,#playqr) .head p{font-size:15px}
+  :is(#stance,#sesfind) .stw,#reflect .refl,#refs .refs{position:static;display:grid;grid-template-columns:1fr;gap:12px;margin-top:14px;overflow:visible}
+  :is(#stance,#sesfind) .stc,#reflect .rcol,#refs .rcol{overflow:visible;height:auto}
+  :is(#stance,#sesfind) .stc h3{font-size:21px}
+  :is(#stance,#sesfind) .stc p.str,.stq,.stc li{font-size:16px}
+  #reflect .rcol li,#qList li span{font-size:16px}
+  #reflect .rcol h3{font-size:20px}
+  :is(#stance,#sesfind) .stband{position:static;margin-top:12px;min-height:0}
+  .stband b{font-size:19px}.stband span{font-size:15px}
+  #playqr .pqwrap{position:static;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:0}
+  #playqr .qrbox img,#playqr .qrbox canvas{width:min(58vw,240px)!important}
+  #playqr h2{font-size:26px}
+  #playqr .hint{font-size:16px}
+  #playqr .pqfoot{position:static;flex-direction:column;align-items:stretch;margin-top:16px}
+  #playqr .pqphotos{justify-content:center}
+  #playqr .pqph img{height:120px}
+  #playqr .pqtext p{font-size:14.5px}
+}
+
+/* ===== 手機直立：圖表頁可左右滑動，標題縮小 ===== */
+@media (max-width:760px) and (orientation:portrait){
+  #titleSlide h1{font-size:15vw;white-space:nowrap}
+  body[data-l="diagram"] #diagram,body[data-l="sesmap"] #sesmap,body[data-l="resist"] #resist{pointer-events:auto}
+  #diagram,#sesmap,#resist{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+  :is(#diagram,#sesmap,#resist) .head{position:fixed;left:14px;right:14px;top:calc(env(safe-area-inset-top,0px) + 14px)}
+  :is(#diagram,#sesmap,#resist) .head h2{font-size:24px}
+  :is(#diagram,#sesmap,#resist) .head p{font-size:14px}
+  #dsvg,#smap,#resist .esvg{position:absolute;left:0;top:calc(env(safe-area-inset-top,0px) + 120px);
+    bottom:calc(env(safe-area-inset-bottom,0px) + 70px);height:auto;width:auto;aspect-ratio:16/9;inset:auto auto auto 0}
+  #dsvg,#smap,#resist .esvg{height:calc(100vh - 200px);width:calc((100vh - 200px)*16/9)}
+  :is(#diagram,#sesmap,#resist)::after{content:"← 左右滑動看完整圖 →";position:fixed;left:50%;transform:translateX(-50%);
+    bottom:calc(env(safe-area-inset-bottom,0px) + 64px);padding:4px 12px;font-size:13px;color:#fff;background:rgba(30,43,42,.7);border-radius:20px;pointer-events:none}
+}
 </style>
 <script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>

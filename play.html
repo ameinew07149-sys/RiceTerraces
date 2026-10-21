@@ -1647,7 +1647,7 @@ const cupState={on:new Map(),s:0,shown:0,shifted:false,busy:false,anim:null};
 const cupGeo=s=>({b:440+s*28,p:398-s*13});
 function cupDraw(s){const {b,p}=cupGeo(s), d=CUP.landD(b,p);
   CUP.landLine.setAttribute("d",d); CUP.landFill.setAttribute("d",d+" L1000 692 L80 692 Z");
-  CUP.thLine.setAttribute("d",`M560 ${p-4} V250`);
+  CUP.thLine.setAttribute("d",`M560 ${p-4} V264`);
   {const s2=Math.round(s);CUP.cupSub.textContent=s2<=1?"沒人照顧，杯子很淺":s2<4?"有人耕作，杯子變深":"人與自然一起維持，杯子夠深";
    CUP.cupSub.setAttribute("fill",s2<=1?"#B5452F":"#3E6B26");}
   if(!cupState.shifted&&!cupState.busy)CUP.ball.setAttribute("cy",b-26),CUP.ball.setAttribute("cx",340);
@@ -1694,8 +1694,8 @@ function cupReset(){const was=cupState.shifted;cupPhase(was?"a":null);if(was)set
   const sedG=el("g",{},g);
   txt(g,135,500,"水梯田",28,{"font-weight":700,fill:"#3F7F8A"}); const cupSub=txt(g,135,532,"沒人照顧，杯子很淺",17,{fill:"#B5452F"});
   txt(g,800,605,"灌叢・次生林",28,{"font-weight":700,fill:"#4F7A4A"}); txt(g,800,638,"濕地物種與蓄水功能消失",18,{fill:"#B5452F"});
-  const thLine=el("path",{d:"M560 356 V250",stroke:"#B5452F","stroke-width":3,"stroke-dasharray":"6 6"},g);
-  txt(g,560,236,"門檻",26,{fill:"#B5452F","font-weight":700});
+  const thLine=el("path",{d:"M560 356 V264",stroke:"#B5452F","stroke-width":3,"stroke-dasharray":"6 6"},g);
+  txt(g,560,220,"門檻",26,{fill:"#B5452F","font-weight":700}); txt(g,560,250,"大量廢耕",19,{fill:"#B5452F","font-weight":700});
   const ball=el("circle",{cx:340,cy:414,r:26,fill:"#C9962E",stroke:"#8A6440","stroke-width":3},g);
   const shiftTag=el("g",{opacity:0,style:"transition:opacity .6s"},g);
   el("rect",{x:660,y:430,width:280,height:46,rx:4,fill:"#B5452F"},shiftTag);

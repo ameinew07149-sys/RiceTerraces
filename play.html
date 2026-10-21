@@ -404,7 +404,7 @@ body[data-l="resist"] #resist .cupbtn{pointer-events:auto;cursor:pointer;outline
 #resist .cupitem.on rect{stroke-width:4.5}
 #resist .cupitem.on text{font-weight:900}
 #resist .cupitem.on{filter:drop-shadow(0 0 4px rgba(201,150,46,.9))}
-#resist .cupicon{transition:transform .8s cubic-bezier(.3,1.2,.5,1)}
+#resist .cupicon{transition:transform .8s cubic-bezier(.3,1.2,.5,1),opacity .4s}
 #playqr .pqph{padding:0;border:2px solid var(--ink);border-radius:3px;background:#fff;cursor:zoom-in;line-height:0}
 #playqr .pqph img{height:clamp(110px,17vh,170px);width:auto;display:block}
 #playqr .pqtext p{margin:0 0 .45em;font-size:clamp(14px,1.15vw,19px);line-height:1.6;color:var(--ink-soft)}
@@ -1644,32 +1644,35 @@ function ecard(p,x,y,w,h,color,title,lines,fs){
 // 抗性與韌性：球與杯（互動版）
 let CUP=null;
 const cupState={on:new Map(),s:0,shown:0,shifted:false,busy:false,anim:null};
-const cupGeo=s=>({b:520+s*20,p:360-s*14});
+const cupGeo=s=>({b:440+s*28,p:398-s*13});
 function cupDraw(s){const {b,p}=cupGeo(s), d=CUP.landD(b,p);
-  CUP.landLine.setAttribute("d",d); CUP.landFill.setAttribute("d",d+" L1000 680 L80 680 Z");
+  CUP.landLine.setAttribute("d",d); CUP.landFill.setAttribute("d",d+" L1000 692 L80 692 Z");
   CUP.thLine.setAttribute("d",`M560 ${p-4} V250`);
+  {const s2=Math.round(s);CUP.cupSub.textContent=s2<=1?"沒人照顧，杯子很淺":s2<4?"有人耕作，杯子變深":"人與自然一起維持，杯子夠深";
+   CUP.cupSub.setAttribute("fill",s2<=1?"#B5452F":"#3E6B26");}
   if(!cupState.shifted&&!cupState.busy)CUP.ball.setAttribute("cy",b-26),CUP.ball.setAttribute("cx",340);
   // 放進來的東西跟著杯底
-  let di=0,si=0;
-  cupState.on.forEach((v)=>{if(v.dir>0){v.g.style.transform=`translate(${240+di*52}px,${b+42}px) scale(.48)`;di++}
-    else{v.g.style.transform=`translate(${276+si*30}px,${b-22-(si%2)*16}px) scale(.4)`;si++}});}
+  const n=cupState.on.size, gap=Math.min(92,560/Math.max(1,n)); let i=0;
+  cupState.on.forEach(v=>{v.g.style.transform=`translate(${130+i*gap}px,640px)`;i++});}
 function cupAnimTo(target){cancelAnimationFrame(cupState.anim);
   const from=cupState.shown,t0=performance.now();
   const step=now=>{const k=Math.min(1,(now-t0)/700),e=1-Math.pow(1-k,3);cupState.shown=from+(target-from)*e;cupDraw(cupState.shown);
     if(k<1)cupState.anim=requestAnimationFrame(step)};cupState.anim=requestAnimationFrame(step);}
 function cupToggle(bt,art,dir){if(cupState.shifted||cupState.busy)return;
   const key=art; if(cupState.on.has(key)){cupState.on.get(key).g.remove();cupState.on.delete(key);bt.classList.remove("on")}
-  else{const g=el("g",{class:"cupicon"},dir>0?CUP.soilG:CUP.sedG);drawArt(art,g);cupState.on.set(key,{g,dir});bt.classList.add("on");
-    if(dir<0){g.style.transition="none";g.style.transform="translate(340px,150px) scale(.42)";void g.getBoundingClientRect();g.style.transition="";}
-    else{g.style.transition="none";g.style.transform=`translate(340px,700px) scale(0)`;void g.getBoundingClientRect();g.style.transition="";}
+  else{const g=el("g",{class:"cupicon"},CUP.soilG);
+    el("circle",{r:40,fill:dir>0?"#EEF4E6":"#FBEDEA",stroke:dir>0?"#5E8C3A":"#B5452F","stroke-width":3},g);
+    el("text",{y:-47,"text-anchor":"middle","font-size":16,"font-weight":700,fill:dir>0?"#3E6B26":"#B5452F",...FONT},g).textContent=dir>0?"▼ 挖深":"▲ 變淺";
+    drawArt(art,el("g",{transform:"scale(.72)"},g));cupState.on.set(key,{g,dir});bt.classList.add("on");
+    g.style.transition="none";g.style.transform=`translate(${dir<0?340:340}px,${dir<0?120:760}px) scale(.3)`;g.style.opacity=0;void g.getBoundingClientRect();g.style.transition="";g.style.opacity=1;
     cupDraw(cupState.shown);}
-  cupState.s=Math.max(-4,Math.min(4,[...cupState.on.values()].reduce((a,v)=>a+v.dir,0)));
+  cupState.s=Math.max(-2,Math.min(5,[...cupState.on.values()].reduce((a,v)=>a+v.dir,0)));
   setTimeout(()=>cupAnimTo(cupState.s),dir<0?120:0);}
-function cupPush(){if(cupState.busy||cupState.shifted)return;cupState.busy=true;cupPhase(cupState.s<=-2?"K":null);
+function cupPush(){if(cupState.busy||cupState.shifted)return;cupState.busy=true;cupPhase(cupState.s<=1?"K":null);
   const L=CUP.landLine, total=L.getTotalLength();
   const lenAtX=x=>{let lo=0,hi=total;for(let i=0;i<30;i++){const m=(lo+hi)/2;(L.getPointAtLength(m).x<x?lo=m:hi=m)}return lo};
   const L0=lenAtX(340),Lp=lenAtX(560),Lr=lenAtX(800);
-  const cross=cupState.s<=-2, k=Math.max(.25,.62-.08*cupState.s);
+  const cross=cupState.s<=1, k=Math.max(.22,.78-.11*cupState.s);
   const keys=cross?[[L0,0],[Lp,900],[Lr,1900]]:[[L0,0],[L0+(Lp-L0)*k,800],[L0,1700]];
   const t0=performance.now(), place=len=>{const pt=L.getPointAtLength(len);CUP.ball.setAttribute("cx",pt.x);CUP.ball.setAttribute("cy",pt.y-26)};
   const step=now=>{const t=now-t0;let i=0;while(i<keys.length-2&&t>keys[i+1][1])i++;
@@ -1684,20 +1687,20 @@ function cupReset(){const was=cupState.shifted;cupPhase(was?"a":null);if(was)set
   CUP.ball.setAttribute("cx",340);CUP.ball.setAttribute("cy",cupGeo(0).b-26);}
 (function(){const R=$("rsvg");let g=sgIn(R,1);
   const landD=(b,p)=>`M80 230 C160 230 200 ${b} 340 ${b} C470 ${b} 500 ${p} 560 ${p} C620 ${p} 660 560 800 560 C920 560 950 230 1000 230`;
-  const land=landD(520,360);
-  const landFill=el("path",{d:land+" L1000 680 L80 680 Z",fill:"#E6E2D2"},g);
+  const land=landD(440,398);
+  const landFill=el("path",{d:land+" L1000 692 L80 692 Z",fill:"#E6E2D2"},g);
   const soilG=el("g",{},g);
   const landLine=el("path",{d:land,fill:"none",stroke:"#4A5755","stroke-width":5,"stroke-linecap":"round"},g);
   const sedG=el("g",{},g);
-  txt(g,165,560,"水梯田",28,{"font-weight":700,fill:"#3F7F8A"}); txt(g,165,592,"有人耕作的狀態",18,{fill:"#4A5755"});
-  txt(g,800,615,"灌叢・次生林",28,{"font-weight":700,fill:"#4F7A4A"}); txt(g,800,648,"濕地物種與蓄水功能消失",18,{fill:"#B5452F"});
+  txt(g,135,500,"水梯田",28,{"font-weight":700,fill:"#3F7F8A"}); const cupSub=txt(g,135,532,"沒人照顧，杯子很淺",17,{fill:"#B5452F"});
+  txt(g,800,605,"灌叢・次生林",28,{"font-weight":700,fill:"#4F7A4A"}); txt(g,800,638,"濕地物種與蓄水功能消失",18,{fill:"#B5452F"});
   const thLine=el("path",{d:"M560 356 V250",stroke:"#B5452F","stroke-width":3,"stroke-dasharray":"6 6"},g);
   txt(g,560,236,"門檻",26,{fill:"#B5452F","font-weight":700});
-  const ball=el("circle",{cx:340,cy:494,r:26,fill:"#C9962E",stroke:"#8A6440","stroke-width":3},g);
+  const ball=el("circle",{cx:340,cy:414,r:26,fill:"#C9962E",stroke:"#8A6440","stroke-width":3},g);
   const shiftTag=el("g",{opacity:0,style:"transition:opacity .6s"},g);
   el("rect",{x:660,y:430,width:280,height:46,rx:4,fill:"#B5452F"},shiftTag);
   txt(shiftTag,800,461,"體制轉移！回不去了",22,{fill:"#FFFFFF","font-weight":700});
-  CUP={landD,landFill,landLine,soilG,sedG,ball,thLine,shiftTag};
+  CUP={landD,landFill,landLine,soilG,sedG,ball,thLine,shiftTag,cupSub};
   g=sgIn(R,2);
   {const bt=el("g",{class:"cupbtn",tabindex:0,role:"button"},g);
    el("rect",{x:150,y:290,width:200,height:52,rx:26,fill:"#B5452F",stroke:"#B5452F","stroke-width":2.5},bt);
@@ -1744,7 +1747,7 @@ function cupReset(){const was=cupState.shifted;cupPhase(was?"a":null);if(was)set
     const bt=el("g",{class:"cupbtn cupitem",tabindex:0,role:"button"},g);
     chip(bt,335+i*150,790,s,{w:136,fs:19,h:44,fill:"#FFFFFF",stroke:"#5E8C3A",color:"#3E6B26"});
     bt.addEventListener("click",e=>{e.stopPropagation();cupToggle(bt,a,1)});});
-  txt(g,600,845,"把剛才找回的事物放進來，或加入不需要的東西，再按「外部干擾」看球會不會跨過門檻",16,{fill:"#4A5755"});
+  txt(g,600,845,"一開始沒人照顧、杯子很淺，一推就過門檻；把找回的事物放進來挖深，再按「外部干擾」比較看看",16,{fill:"#4A5755"});
   ltxt(g,60,880,"參考：Holling (1973)；Cinner & Barnes (2019) 球與杯；Gunderson & Holling (2002) 適應循環。案例：人禾〈百年埤巖修復〉〈乾旱試煉之田壁修復術〉（2022）",15,{fill:"#4A5755"});
 })();
 // 多樣性
